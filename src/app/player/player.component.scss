@@ -1,0 +1,38 @@
+@import './../../styles.scss';
+
+.player-frame {
+position: relative;
+left: 0;
+top: 0 ;
+@include dFlex($jc:flex-start, $ai:center);
+@include gold-bgr();
+@include frameStyle($w: 120px, $h:auto);
+margin: 12px;
+padding: 12px;
+}
+
+.player-active {
+    @include gold-bgr($baseColor: $base-gold, $shadeAmount: 30%);
+}
+
+.header {
+    position: relative;
+    width: 100%;
+    @include dFlex();
+}
+
+.player-box {
+    margin-top: 8px;
+    position: relative;
+    left: 0;
+    @include dFlex($fd:row, $jc:flex-start);
+   
+    span {
+        margin-left: 8px;
+        width: max-content;
+        text-align: center;
+    }
+    img {
+        width: 30px;
+    }
+}

@@ -1,0 +1,17 @@
+@import './../../styles.scss';
+
+.landing-page-section {
+    @include defSide();  
+    background-image: url(./../../assets/images/backgrounds/landing-page-bgr.png);  
+    @include mainBacking();
+    @include dFlex();    
+}
+
+.btn-frame {
+    @include dFlex();
+    @include btnStyle();
+    @include gold-bgr();
+    >a {
+        @include aStyle();        
+    }
+}
