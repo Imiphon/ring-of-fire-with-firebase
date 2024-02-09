@@ -8,6 +8,7 @@ import { environment } from '../environments/environment';
 
 @NgModule({
   imports: [
+    AppComponent,
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule, // Firestore
