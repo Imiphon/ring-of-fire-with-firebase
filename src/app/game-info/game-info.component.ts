@@ -26,21 +26,21 @@ export class GameInfoComponent {
     { title: 'Rule', description: 'Make a rule. Everyone needs to drink when he breaks the rule.' },
   ];
 
-  cardTitel: string = 'Card Titles ';
+  cardTitel: string = 'Card Titles';
   description: string = '';
-  number:number = 0;
+  number: number = 0;
   @Input() card: string = '';
-  constructor() {}
-  ngOnInit() {}
+  constructor() { }
+  ngOnInit() { }
   ngOnChanges(): void {
     this.number = +this.card.split('_')[1];
-    
+
     // check if index != NaN
     if (this.number >= 0 && this.number <= this.cardAction.length) {
-      this.cardTitel = this.cardAction[this.number-1].title;
-      this.description = this.cardAction[this.number-1].description;
-      console.log(this.cardAction[this.number-1].title);
-    } 
+      this.cardTitel = this.cardAction[this.number - 1].title;
+      this.description = this.cardAction[this.number - 1].description;
+      console.log(this.cardAction[this.number - 1].title);
+    }
   }
-  
+
 }
