@@ -54,18 +54,18 @@ export class MainGameComponent {
     if (!this.pickCardAnimation) {
       this.currentCard = this.game.stack.pop()!;
       this.pickCardAnimation = true;
-      this.game.currentPlayer++;
-      this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
-      let currentName: string = this.game.players[(this.game.currentPlayer) -1];
-      console.log('currrentPlayer: ', this.game.currentPlayer);
-      console.log('current Name: ', currentName);
-      
+      let currentName: string = this.game.players[this.game.currentPlayerId];
+      console.log('currrentPlayerId: ', this.game.currentPlayerId);
+      console.log('players.length: ', this.game.players.length);
+      console.log('current Name: ', currentName);      
     }
     setTimeout(() => {
       this.game.playedCards.push(this.currentCard);
       this.pickCardAnimation = false;
-    }, 1300);
-    console.log('players.length: ', this.game.players.length);
+
+      this.game.currentPlayerId++;
+      if(this.game.currentPlayerId == this.game.players.length) this.game.currentPlayerId = 0;
+    }, 1300);    
   }
 
   openDialog(): void {

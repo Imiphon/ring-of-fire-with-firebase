@@ -1,5 +1,5 @@
 <app-player [ngStyle]="{ 'position': 'absolute', 'top.px': 120 + (i* 90)}"
-    *ngFor="let player of game.players; let i= index;" [playerActive]="i == game.currentPlayer" [name]="player">
+    *ngFor="let player of game.players; let i= index;" [playerActive]="i == game.currentPlayerId" [name]="player">
     <!--Variable[name] is sending to sub-component app-player-->
 </app-player>
 
