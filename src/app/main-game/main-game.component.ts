@@ -10,7 +10,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { GameInfoComponent } from "./../game-info/game-info.component";
-//import { FirestoreService } from "./../firebase-service/firebase-service.component";
+import { FirestoreService } from "./../firebase-service/firebase-service.component";
 
 @Component({
   selector: 'app-main-game',
@@ -35,13 +35,13 @@ export class MainGameComponent {
   public game: Game = new Game();
   public currentCard: string = '';
 
-  //, private firestoreService: FirestoreService
-  constructor(public dialog: MatDialog ) {
+  //
+  constructor(public dialog: MatDialog, private firestoreService: FirestoreService ) {
   }
 
   ngOnInit() {
     this.newGame();
-    //this.ShowCollection();
+    this.ShowCollection();
   }
 
   /**
@@ -52,9 +52,9 @@ export class MainGameComponent {
     console.log(this.game);
   }
 
-  // ShowCollection() {
-  //   this.firestoreService.getItems();
-  // } 
+   ShowCollection() {
+     this.firestoreService.getItems();
+   } 
 
   takeCard() {
     if (!this.pickCardAnimation) {
