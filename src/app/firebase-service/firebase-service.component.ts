@@ -11,7 +11,8 @@ export class FirestoreService {
   constructor(private firestore: Firestore) { }
 
   getItems(): Observable<any[]> {
-    const gameCollection = collection(this.firestore, 'items');
-    return collectionData(gameCollection);
+    debugger;
+    const gameCollection = collection(this.firestore, 'games');
+    return collectionData(gameCollection);    
   }
 }
