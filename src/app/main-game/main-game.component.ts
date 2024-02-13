@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common'; //Hier wird das CommonModule aus dem @angular/common-Paket importiert. Dieses Modul stellt allgemeine Direktiven, Pipes und Services bereit, die in vielen Angular-Anwendungen verwendet werden. Beispiele sind Direktiven wie ngIf und ngFor. Es wird häufig in Feature-Modulen importiert, um diese allgemeinen Funktionen zugänglich zu machen.
 import { RouterOutlet } from '@angular/router'; // Diese Zeile importiert RouterOutlet aus dem @angular/router-Paket. RouterOutlet ist eine Direktive in Angular, die als Platzhalter fungiert, an dem geroutete Ansichten (Komponenten) im Template einer Anwendung angezeigt werden. Es wird in Templates verwendet, um anzugeben, wo der Inhalt einer gerouteten Komponente gerendert werden soll.
 import { Game } from "./../../game";
@@ -35,13 +35,11 @@ export class MainGameComponent {
   public game: Game = new Game();
   public currentCard: string = '';
 
-  //private firestoreService: FirestoreService 
-  constructor(public dialog: MatDialog, private firestoreService: FirestoreService ) {
+  constructor(public dialog: MatDialog, private firestoreService: FirestoreService) {
   }
 
   ngOnInit() {
     this.newGame();
-    this.ShowCollection();
   }
 
   /**
@@ -49,29 +47,22 @@ export class MainGameComponent {
    */
   newGame() {
     this.game = new Game();
-    console.log(this.game);
+    this.firestoreService.createGame();
   }
-  
-   ShowCollection() {
-     this.firestoreService.getItems();
-   } 
 
   takeCard() {
     if (!this.pickCardAnimation) {
       this.currentCard = this.game.stack.pop()!;
       this.pickCardAnimation = true;
       let currentName: string = this.game.players[this.game.currentPlayerId];
-      console.log('currrentPlayerId: ', this.game.currentPlayerId);
-      console.log('players.length: ', this.game.players.length);
-      console.log('current Name: ', currentName); 
     }
     setTimeout(() => {
       this.game.playedCards.push(this.currentCard);
       this.pickCardAnimation = false;
 
       this.game.currentPlayerId++;
-      if(this.game.currentPlayerId == this.game.players.length) this.game.currentPlayerId = 0;
-    }, 1300);    
+      if (this.game.currentPlayerId == this.game.players.length) this.game.currentPlayerId = 0;
+    }, 1300);
   }
 
   openDialog(): void {
@@ -80,8 +71,9 @@ export class MainGameComponent {
       .afterClosed()
       .subscribe(name => {
         this.game.players.push(name);
-        console.log(this.game.players);
-        console.log('new name in main-game.component.ts: ', name);
+        //Update inside the callback to get it DIRECTLY to firebase cloud
+        this.firestoreService.updateGame(this.game); 
       });
+      
   }
 }

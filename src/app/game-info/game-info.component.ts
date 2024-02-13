@@ -39,7 +39,7 @@ export class GameInfoComponent {
     if (this.number >= 0 && this.number <= this.cardAction.length) {
       this.cardTitel = this.cardAction[this.number - 1].title;
       this.description = this.cardAction[this.number - 1].description;
-      console.log(this.cardAction[this.number - 1].title);
+     // console.log(this.cardAction[this.number - 1].title);
     }
   }
 
