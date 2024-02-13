@@ -35,7 +35,7 @@ export class MainGameComponent {
   public game: Game = new Game();
   public currentCard: string = '';
 
-  //
+  //private firestoreService: FirestoreService 
   constructor(public dialog: MatDialog, private firestoreService: FirestoreService ) {
   }
 
@@ -51,7 +51,7 @@ export class MainGameComponent {
     this.game = new Game();
     console.log(this.game);
   }
-
+  
    ShowCollection() {
      this.firestoreService.getItems();
    } 
@@ -63,7 +63,7 @@ export class MainGameComponent {
       let currentName: string = this.game.players[this.game.currentPlayerId];
       console.log('currrentPlayerId: ', this.game.currentPlayerId);
       console.log('players.length: ', this.game.players.length);
-      console.log('current Name: ', currentName);      
+      console.log('current Name: ', currentName); 
     }
     setTimeout(() => {
       this.game.playedCards.push(this.currentCard);

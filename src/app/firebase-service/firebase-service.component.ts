@@ -6,11 +6,15 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 }) //makes this component global
 export class FirestoreService {
+
+  //private firestore: Firestore
   constructor(private firestore: Firestore) { }
 
   getItems(): Observable<any[]> {
-    debugger;
     const gameCollection = collection(this.firestore, 'games');
-    return collectionData(gameCollection);    
+    const dataCollection = collectionData(gameCollection);  
+    console.log(dataCollection);
+     
+    return  dataCollection;
   }
 }
