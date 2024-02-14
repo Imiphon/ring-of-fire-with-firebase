@@ -24,6 +24,15 @@
     @include dFlex();
 }
 
+.gameId-frame {
+    position: absolute;
+    bottom: 32px;
+    right: 32px;
+    @include btnStyle();
+    @include gold-bgr();
+
+}
+
 .cardboard-frame {
     position: absolute;
     @include defSide();

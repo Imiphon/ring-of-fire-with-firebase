@@ -34,20 +34,26 @@ export class MainGameComponent {
   //shows all cards in stack, all players
   public game: Game = new Game();
   public currentCard: string = '';
+  public gameIdDisplay: string = '';
 
   constructor(public dialog: MatDialog, private firestoreService: FirestoreService) {
   }
 
   ngOnInit() {
     this.newGame();
+    //this.checkGameActivity();
+    //this.holdGameActive();
   }
 
   /**
    * creates a new Game Object with reuirements from Game
    */
   newGame() {
-    this.game = new Game();
-    this.firestoreService.createGame();
+    //this.game = new Game();
+    this.firestoreService.createGame().then(gameId => {
+      this.gameIdDisplay = gameId; //is shown in main-game.component.html/gameId-frame
+    });
+    this.firestoreService.deleteOldGames();
   }
 
   takeCard() {
@@ -73,7 +79,6 @@ export class MainGameComponent {
         this.game.players.push(name);
         //Update inside the callback to get it DIRECTLY to firebase cloud
         this.firestoreService.updateGame(this.game); 
-      });
-      
+      });      
   }
 }

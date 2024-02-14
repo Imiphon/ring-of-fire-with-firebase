@@ -30,8 +30,11 @@ export class GameInfoComponent {
   description: string = '';
   number: number = 0;
   @Input() card: string = '';
+
   constructor() { }
+
   ngOnInit() { }
+
   ngOnChanges(): void {
     this.number = +this.card.split('_')[1];
 
@@ -39,7 +42,7 @@ export class GameInfoComponent {
     if (this.number >= 0 && this.number <= this.cardAction.length) {
       this.cardTitel = this.cardAction[this.number - 1].title;
       this.description = this.cardAction[this.number - 1].description;
-     // console.log(this.cardAction[this.number - 1].title);
+      // console.log(this.cardAction[this.number - 1].title);
     }
   }
 

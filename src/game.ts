@@ -4,6 +4,7 @@ export class Game {
     public stack: string[] = [];
     public playedCards: string[] = [];
     public currentPlayerId: number = 0;
+    public timeStamp: string = '';
 
     constructor() {
         for (let i = 1; i < 14; i++) {
@@ -20,7 +21,8 @@ export class Game {
             players: this.players,
             stack: this.stack,
             playedCards: this.playedCards,
-            currentPlayerId: this.currentPlayerId
+            currentPlayerId: this.currentPlayerId,
+            timeStamp: this.timeStamp
         }
     }
 }
