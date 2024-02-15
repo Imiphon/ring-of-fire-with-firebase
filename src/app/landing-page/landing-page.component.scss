@@ -4,7 +4,9 @@
     @include defSide();  
     background-image: url(./../../assets/images/backgrounds/landing-page-bgr.png);  
     @include mainBacking();
-    @include dFlex();    
+    @include dFlex(); 
+    gap: 10px;   
+
 }
 
 .btn-frame {
@@ -15,3 +17,5 @@
         @include aStyle();        
     }
 }
+
+

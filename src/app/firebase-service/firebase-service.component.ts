@@ -12,49 +12,38 @@ import { Unsubscribe } from '@firebase/firestore';
 export class FirestoreService {
   //game?: Unsubscribe;
   singleGame?: Unsubscribe;
-  currentGame!: Game;
-  currentId = false;
+  game!: Game;
   gameId: string = '';
 
   constructor(private firestore: Firestore) {
-    //this.initGameListener();
-    this.initSingleGameListener();    
+  //  this.initGameListener();
+       
   }
 
-  private initSingleGameListener() {
-    const gameRef = this.gameReference();
-    this.singleGame = onSnapshot(gameRef, (snapshot) => {
-      // Iteration over each collection in games and action
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        console.log('current game with onSnapshot: ', data);
-      });
-    });
-  }
-
-  gameReference() {
-    return collection(this.firestore, 'games');
-  }
-
-  async createGame() {
-    if (!this.currentId) {
-      this.currentGame = new Game(); // init new Game Object
-      const currTimeStamp = new Date().toISOString(); 
-      this.currentGame.timeStamp = currTimeStamp;           
-      console.log('toJson contain: ', this.currentGame.toJson);
-      
-      const docRef = await addDoc(collection(this.firestore, 'games'), this.currentGame.toJson());
-      this.gameId = docRef.id; 
-      console.log('New Doc with ID: ', docRef.id);
-      console.log('timeStamp: ', currTimeStamp);
-      return docRef.id; 
+  async saveGame(game: Game): Promise<string> {    
+    if (!game.id) {
+      const docRef = await addDoc(collection(this.firestore, 'games'), game.toJson());
+      game.id = docRef.id; // Speichert die generierte ID im Game-Objekt
+      return docRef.id;
     } else {
-      console.log('currentId exist');
-      return ''; //if no gameId exists 
+      const gameRef = doc(this.firestore, 'games', game.id);
+      await setDoc(gameRef, game.toJson(), { merge: true });
+      return game.id;
     }
   }
 
-  async updateGame(game: Game) {
+  singleGameReference() {
+    const currentGame = onSnapshot(doc(this.firestore, "games", this.gameId), (doc) => {
+      if (doc.exists()) {
+        console.log("Aktuelle Daten: ", doc.data());
+      } else {
+        console.log("Dokument existiert nicht!");
+      }
+    });
+    return currentGame
+  }
+
+  async updateFireGame(game: Game) {
     try {
       if (this.gameId) { 
         const gameRef = doc(this.firestore, 'games', this.gameId);
@@ -71,22 +60,63 @@ export class FirestoreService {
   }
 
   async deleteOldGames() {
-    const fiveMinutesAgo = Timestamp.now().toMillis() - (5 * 60 * 1000); // 5 Min in Millisec
+    const oneHour = Timestamp.now().toMillis() - (60 * 60 * 1000); // 60 Min in Millisec
     const gamesRef = collection(this.firestore, 'games');
-    const q = query(gamesRef, where('timeStamp', '<=', new Date(fiveMinutesAgo).toISOString()));
+    const q = query(gamesRef, where('timeStamp', '<=', new Date(oneHour).toISOString()));
 
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach(async (doc) => {
-      await deleteDoc(doc.ref);
-      console.log(`Spiel ${doc.id} gelöscht, da es älter als 5 Minuten ist.`);
+     // await deleteDoc(doc.ref);
+      console.log(`Spiel ${doc.id} könnte gelöscht werden, da es zu alt ist.`);
     });
   }
 
   async checkGameExists(gameId: string): Promise<boolean> {
     const gameRef = doc(this.firestore, 'games', gameId);
     const docSnap = await getDoc(gameRef);
+    if (docSnap) {
+      this.gameId = gameId;
+    }
     return docSnap.exists();
   }
-
 }
+
+/**
+ * //Get infos for all documents
+    private initGameListener() {
+    const gameRef = this.gameReference(); // = 'games' on firebase
+    this.singleGame = onSnapshot(gameRef, (snapshot) => {
+      // Iteration over each collection in games and action
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        //console.log('current game with onSnapshot: ', data);
+      });
+    });
+  }
+
+  gameReference() {
+    return collection(this.firestore, 'games');
+  }
+ */
+
+/**
+ *   async createGame() {    
+    if (this.gameId == '') {
+      this.game = new Game(); // init new Game Object
+      const currTimeStamp = new Date().toISOString(); 
+      this.game.timeStamp = currTimeStamp;           
+      console.log('toJson contain: ', this.game.toJson);
+      
+      
+      const docRef = await addDoc(collection(this.firestore, 'games'), this.game.toJson());
+      this.gameId = docRef.id; 
+      console.log('New Doc with ID: ', docRef.id);
+      console.log('timeStamp: ', currTimeStamp);
+      return docRef.id; 
+    } else {
+      console.log('existingId is', this.gameId);
+      return this.gameId; 
+    }
+  }
+ */
 
