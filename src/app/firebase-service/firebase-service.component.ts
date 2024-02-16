@@ -68,8 +68,6 @@ export class FirestoreService {
     querySnapshot.forEach(async (doc) => {
      // await deleteDoc(doc.ref);
       console.log(`Spiel ${doc.id} könnte gelöscht werden, da es zu alt ist.`);
-     // await deleteDoc(doc.ref);
-      console.log(`Spiel ${doc.id} könnte gelöscht werden, da es zu alt ist.`);
     });
   }
 
@@ -82,6 +80,47 @@ export class FirestoreService {
     return docSnap.exists();
   }
 }
+
+/**
+ * //Get infos for all documents
+    private initGameListener() {
+    const gameRef = this.gameReference(); // = 'games' on firebase
+    this.singleGame = onSnapshot(gameRef, (snapshot) => {
+      // Iteration over each collection in games and action
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        //console.log('current game with onSnapshot: ', data);
+      });
+    });
+  }
+
+  gameReference() {
+    return collection(this.firestore, 'games');
+  }
+ */
+
+/**
+ *   async createGame() {    
+    if (this.gameId == '') {
+      this.game = new Game(); // init new Game Object
+      const currTimeStamp = new Date().toISOString(); 
+      this.game.timeStamp = currTimeStamp;           
+      console.log('toJson contain: ', this.game.toJson);
+      
+      
+      const docRef = await addDoc(collection(this.firestore, 'games'), this.game.toJson());
+      this.gameId = docRef.id; 
+      console.log('New Doc with ID: ', docRef.id);
+      console.log('timeStamp: ', currTimeStamp);
+      return docRef.id; 
+    } else {
+      console.log('existingId is', this.gameId);
+      return this.gameId; 
+    }
+  }
+ */
+
+
 
 /**
  * //Get infos for all documents
