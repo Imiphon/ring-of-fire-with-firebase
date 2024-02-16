@@ -73,7 +73,7 @@ export class MainGameComponent {
       .subscribe(name => {
         this.game.players.push(name);
         //Update inside the callback to get it DIRECTLY to firebase cloud
-        this.firestoreService.updateGame(this.game); 
+        this.firestoreService.updateFireGame(this.game); 
       });      
   }
 }

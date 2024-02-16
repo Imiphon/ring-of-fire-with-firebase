@@ -1,4 +1,6 @@
 export class Game {
+    //coming from LandingPageComponent if it still exist 
+    public id?: string = ''; 
 
     public players: string[] = ['Anna', 'Egon', 'Herbert'];
     public stack: string[] = [];

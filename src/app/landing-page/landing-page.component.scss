@@ -4,8 +4,14 @@
     @include defSide();  
     background-image: url(./../../assets/images/backgrounds/landing-page-bgr.png);  
     @include mainBacking();
+<<<<<<< HEAD
     @include dFlex();  
     gap: 10px  
+=======
+    @include dFlex(); 
+    gap: 10px;   
+
+>>>>>>> ba2eb0ccef6bca105b9f15764f0ec9942facc815
 }
 
 .btn-frame {
@@ -16,3 +22,5 @@
         @include aStyle();        
     }
 }
+
+

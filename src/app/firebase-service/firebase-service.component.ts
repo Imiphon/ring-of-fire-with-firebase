@@ -13,6 +13,7 @@ export class FirestoreService {
   //game?: Unsubscribe;
   singleGame?: Unsubscribe;
   game!: Game;
+  game!: Game;
   gameId: string = '';
 
   constructor(private firestore: Firestore) {
@@ -21,14 +22,14 @@ export class FirestoreService {
   }
 
   async saveGame(game: Game): Promise<string> {    
-    if (!this.gameId) {
+    if (!game.id) {
       const docRef = await addDoc(collection(this.firestore, 'games'), game.toJson());
-      this.gameId = docRef.id; // Speichert die generierte ID im Game-Objekt
+      game.id = docRef.id; // Speichert die generierte ID im Game-Objekt
       return docRef.id;
     } else {
-      const gameRef = doc(this.firestore, 'games', this.gameId);
+      const gameRef = doc(this.firestore, 'games', game.id);
       await setDoc(gameRef, game.toJson(), { merge: true });
-      return this.gameId;
+      return game.id;
     }
   }
 
@@ -43,7 +44,7 @@ export class FirestoreService {
     return currentGame
   }
 
-  async updateGame(game: Game) {
+  async updateFireGame(game: Game) {
     try {
       if (this.gameId) { 
         const gameRef = doc(this.firestore, 'games', this.gameId);
@@ -68,6 +69,8 @@ export class FirestoreService {
     querySnapshot.forEach(async (doc) => {
      // await deleteDoc(doc.ref);
       console.log(`Spiel ${doc.id} könnte gelöscht werden, da es zu alt ist.`);
+     // await deleteDoc(doc.ref);
+      console.log(`Spiel ${doc.id} könnte gelöscht werden, da es zu alt ist.`);
     });
   }
 
@@ -80,3 +83,43 @@ export class FirestoreService {
     return docSnap.exists();
   }
 }
+
+/**
+ * //Get infos for all documents
+    private initGameListener() {
+    const gameRef = this.gameReference(); // = 'games' on firebase
+    this.singleGame = onSnapshot(gameRef, (snapshot) => {
+      // Iteration over each collection in games and action
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        //console.log('current game with onSnapshot: ', data);
+      });
+    });
+  }
+
+  gameReference() {
+    return collection(this.firestore, 'games');
+  }
+ */
+
+/**
+ *   async createGame() {    
+    if (this.gameId == '') {
+      this.game = new Game(); // init new Game Object
+      const currTimeStamp = new Date().toISOString(); 
+      this.game.timeStamp = currTimeStamp;           
+      console.log('toJson contain: ', this.game.toJson);
+      
+      
+      const docRef = await addDoc(collection(this.firestore, 'games'), this.game.toJson());
+      this.gameId = docRef.id; 
+      console.log('New Doc with ID: ', docRef.id);
+      console.log('timeStamp: ', currTimeStamp);
+      return docRef.id; 
+    } else {
+      console.log('existingId is', this.gameId);
+      return this.gameId; 
+    }
+  }
+ */
+
