@@ -13,7 +13,6 @@ export class FirestoreService {
   //game?: Unsubscribe;
   singleGame?: Unsubscribe;
   game!: Game;
-  game!: Game;
   gameId: string = '';
 
   constructor(private firestore: Firestore) {
