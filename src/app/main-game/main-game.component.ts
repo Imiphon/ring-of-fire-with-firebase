@@ -41,6 +41,7 @@ export class MainGameComponent {
 
   ngOnInit() {
     this.newGame();
+    debugger;
   }
 
   newGame() {

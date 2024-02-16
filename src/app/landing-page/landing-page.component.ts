@@ -35,9 +35,9 @@ export class LandingPageComponent {
   }
   async joinGame() {
     const gameExists = await this.firestoreService.checkGameExists(this.gameId);
-    if (gameExists) {         
-      this.router.navigate(['/gameStart/', this.gameId]);  
-      //this.game.gameId = this.gameId;   
+    if (gameExists) { 
+      this.firestoreService.gameId = this.gameId;              
+      this.router.navigate(['/gameStart/', this.gameId]);        
     } else {
       alert('Game ID does not exist.'); 
     }

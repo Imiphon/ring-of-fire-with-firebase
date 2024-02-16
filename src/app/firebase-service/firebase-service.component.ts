@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collection, collectionData, onSnapshot, doc, addDoc, getDocs, setDoc, updateDoc, deleteDoc, query, where, Timestamp, getDoc} from '@angular/fire/firestore';
-//import { Observable } from 'rxjs';
-//import { MainGameComponent } from "./../main-game/main-game.component";
 import { Game } from "./../../game";
 import { Unsubscribe } from '@firebase/firestore';
 
@@ -10,26 +8,51 @@ import { Unsubscribe } from '@firebase/firestore';
 }) //makes this component global
 
 export class FirestoreService {
-  //game?: Unsubscribe;
   singleGame?: Unsubscribe;
   gameOverview!: Game;
   gameId: string = '';
 
-  constructor(private firestore: Firestore) {
-  //  this.initGameListener();
-       
+  constructor(private firestore: Firestore) {       
+  }
+
+  setNewOverview(newDatas: Game){
+    this.gameOverview.players = newDatas.players;
+    this.gameOverview.stack = newDatas.stack;
+    this.gameOverview.playedCards = newDatas.playedCards;
+    this.gameOverview.currentPlayerId = newDatas.currentPlayerId;
+    this.gameOverview.timeStamp = newDatas.timeStamp;  
+  }
+
+  public initGameListener() {    
+    if (this.gameId) {
+      this.singleGame = onSnapshot(doc(this.firestore, 'games', this.gameId), (documentSnapshot) => {
+        if (documentSnapshot.exists()) {
+          console.log("Current data: ", documentSnapshot.data());
+          const gameData = documentSnapshot.data() as Game; // Konvertiert die Snapshot-Daten in den Typ Game
+        this.setNewOverview(gameData);
+        } else {
+          console.log("No such document!");
+        }
+      }, (error) => {
+        console.error("Error getting document: ", error);
+      });
+    } else {
+      console.log("gameId is not set. Cannot initialize listener.");
+    }
   }
 
   async saveGame(newGame: Game): Promise<string> { 
-    this.gameOverview = newGame;   
+    debugger;
     if (this.gameId == '') {
       let newTimestamp = Timestamp.now().toMillis();
       newGame.timeStamp = newTimestamp;      
-      const docRef = await addDoc(collection(this.firestore, 'games'), this.gameOverview.toJson());
+      const docRef = await addDoc(collection(this.firestore, 'games'), newGame.toJson());
       this.gameId = docRef.id; 
+      this.gameOverview = newGame;
       this.gameOverview.id = this.gameId;
       this.updateFirebase(this.gameOverview);
-      return this.gameId;     
+      this.initGameListener();   
+      return this.gameId;        
     } else {
       const gameRef = doc(this.firestore, 'games', this.gameId);
       await setDoc(gameRef, this.gameOverview.toJson(), { merge: true });
@@ -69,14 +92,14 @@ export class FirestoreService {
   }
 
   async deleteOldGames() {
-    const hourAgo = Timestamp.now().toMillis() - (3 * 60 * 1000); 
+    const hourAgo = Timestamp.now().toMillis() - (30 * 60 * 1000); 
     const gamesRef = collection(this.firestore, 'games');
     const oldGame = query(gamesRef, where('timeStamp', '<=', hourAgo));
   
     const gameToDelete = await getDocs(oldGame);
     gameToDelete.forEach(async (document) => {
       await deleteDoc(doc(this.firestore, 'games', document.id));
-      console.log(`Spiel ${document.id} wurde gelöscht, da es älter als eine Stunde ist.`);
+      console.log(`Spiel ${document.id} wurde gelöscht, da es zu alt ist.`);
     });
   }
 
@@ -108,65 +131,4 @@ export class FirestoreService {
   }
  */
 
-/**
- *   async createGame() {    
-    if (this.gameId == '') {
-      this.game = new Game(); // init new Game Object
-      const currTimeStamp = new Date().toISOString(); 
-      this.gameOverview.timeStamp = currTimeStamp;           
-      console.log('toJson contain: ', this.gameOverview.toJson);
-      
-      
-      const docRef = await addDoc(collection(this.firestore, 'games'), this.gameOverview.toJson());
-      this.gameId = docRef.id; 
-      console.log('New Doc with ID: ', docRef.id);
-      console.log('timeStamp: ', currTimeStamp);
-      return docRef.id; 
-    } else {
-      console.log('existingId is', this.gameId);
-      return this.gameId; 
-    }
-  }
- */
-
-
-
-/**
- * //Get infos for all documents
-    private initGameListener() {
-    const gameRef = this.gameReference(); // = 'games' on firebase
-    this.singleGame = onSnapshot(gameRef, (snapshot) => {
-      // Iteration over each collection in games and action
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        //console.log('current game with onSnapshot: ', data);
-      });
-    });
-  }
-
-  gameReference() {
-    return collection(this.firestore, 'games');
-  }
- */
-
-/**
- *   async createGame() {    
-    if (this.gameId == '') {
-      this.game = new Game(); // init new Game Object
-      const currTimeStamp = new Date().toISOString(); 
-      this.game.timeStamp = currTimeStamp;           
-      console.log('toJson contain: ', this.gameOverview.toJson);
-      
-      
-      const docRef = await addDoc(collection(this.firestore, 'games'), this.gameOverview.toJson());
-      this.gameId = docRef.id; 
-      console.log('New Doc with ID: ', docRef.id);
-      console.log('timeStamp: ', currTimeStamp);
-      return docRef.id; 
-    } else {
-      console.log('existingId is', this.gameId);
-      return this.gameId; 
-    }
-  }
- */
 
