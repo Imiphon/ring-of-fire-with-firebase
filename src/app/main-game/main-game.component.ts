@@ -47,7 +47,7 @@ export class MainGameComponent {
       this.firestoreService.saveGame(this.game).then(gameId => {
         this.gameIdDisplay = gameId; 
       });
-    this.firestoreService.deleteOldGames();
+    //this.firestoreService.deleteOldGames();
     this.firestoreService.singleGameReference();
   }
 

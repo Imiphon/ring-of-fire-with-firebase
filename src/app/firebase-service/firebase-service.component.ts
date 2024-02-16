@@ -12,7 +12,7 @@ import { Unsubscribe } from '@firebase/firestore';
 export class FirestoreService {
   //game?: Unsubscribe;
   singleGame?: Unsubscribe;
-  game!: Game;
+  gameOverview!: Game;
   gameId: string = '';
 
   constructor(private firestore: Firestore) {
@@ -20,15 +20,19 @@ export class FirestoreService {
        
   }
 
-  async saveGame(game: Game): Promise<string> {    
-    if (!game.id) {
-      const docRef = await addDoc(collection(this.firestore, 'games'), game.toJson());
-      game.id = docRef.id; // Speichert die generierte ID im Game-Objekt
-      return docRef.id;
+  async saveGame(newGame: Game): Promise<string> { 
+    this.gameOverview = newGame;   
+    if (this.gameId == '') {
+      let newTimestamp = Timestamp.now().toMillis();
+      newGame.timeStamp = newTimestamp;
+      const docRef = await addDoc(collection(this.firestore, 'games'), this.gameOverview.toJson());
+      this.gameId = docRef.id; 
+      console.log(docRef);
+      return this.gameId;     
     } else {
-      const gameRef = doc(this.firestore, 'games', game.id);
-      await setDoc(gameRef, game.toJson(), { merge: true });
-      return game.id;
+      const gameRef = doc(this.firestore, 'games', this.gameId);
+      await setDoc(gameRef, this.gameOverview.toJson(), { merge: true });
+      return this.gameId;
     }
   }
 
@@ -43,14 +47,18 @@ export class FirestoreService {
     return currentGame
   }
 
-  async updateFireGame(game: Game) {
+  async updateFireGame(updateGame: Game) {
     try {
       if (this.gameId) { 
-        const gameRef = doc(this.firestore, 'games', this.gameId);
+        debugger;
+       const gameRef = doc(this.firestore, 'games', this.gameId);        
+        let newTimestamp = Timestamp.now().toMillis();
+        this.gameOverview.timeStamp = newTimestamp;
+        
         // set without merge will overwrite a document or create it if it doesn't exist yet
         // set with merge will update fields in the document or create it if it doesn't exists
-        await setDoc(gameRef, game.toJson(), { merge: true });
-        console.log('Game with ID: ' + this.gameId + ' is updated');
+        await setDoc(gameRef, updateGame.toJson(), { merge: false });
+        console.log('Game with ID: ' + this.gameId + ' is updated to: ', this.gameOverview);
       } else {
         console.log('GameId does not exist.');
       }
@@ -59,17 +67,22 @@ export class FirestoreService {
     }
   }
 
-  async deleteOldGames() {
-    const oneHour = Timestamp.now().toMillis() - (60 * 60 * 1000); // 60 Min in Millisec
-    const gamesRef = collection(this.firestore, 'games');
-    const q = query(gamesRef, where('timeStamp', '<=', new Date(oneHour).toISOString()));
-
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach(async (doc) => {
-     // await deleteDoc(doc.ref);
-      console.log(`Spiel ${doc.id} könnte gelöscht werden, da es zu alt ist.`);
-    });
-  }
+//  async deleteOldGames() {
+//    const hourAgo = Timestamp.now().toMillis() - (60 * 60 * 1000); // 60 Min in Millisec
+//    const gamesRef = collection(this.firestore, 'games');
+//    let timeNow = Timestamp.now().toMillis();    
+//    const allGames = await getDocs(collection(this.firestore, 'games'), 
+//    deleteOdld(() => {
+//      querySnapshot.forEach(async (doc) => {
+//        // await deleteDoc(doc.ref);
+//         console.log(`Das Spiel ${doc.id} könnte gelöscht werden, da es zu alt ist.`);
+//       });
+//    }));
+//    querySnapshot.forEach(async (doc) => {
+//     // await deleteDoc(doc.ref);
+//      console.log(`Spiel ${doc.id} könnte gelöscht werden, da es zu alt ist.`);
+//    });
+//  }
 
   async checkGameExists(gameId: string): Promise<boolean> {
     const gameRef = doc(this.firestore, 'games', gameId);
@@ -104,11 +117,11 @@ export class FirestoreService {
     if (this.gameId == '') {
       this.game = new Game(); // init new Game Object
       const currTimeStamp = new Date().toISOString(); 
-      this.game.timeStamp = currTimeStamp;           
-      console.log('toJson contain: ', this.game.toJson);
+      this.gameOverview.timeStamp = currTimeStamp;           
+      console.log('toJson contain: ', this.gameOverview.toJson);
       
       
-      const docRef = await addDoc(collection(this.firestore, 'games'), this.game.toJson());
+      const docRef = await addDoc(collection(this.firestore, 'games'), this.gameOverview.toJson());
       this.gameId = docRef.id; 
       console.log('New Doc with ID: ', docRef.id);
       console.log('timeStamp: ', currTimeStamp);
@@ -146,10 +159,10 @@ export class FirestoreService {
       this.game = new Game(); // init new Game Object
       const currTimeStamp = new Date().toISOString(); 
       this.game.timeStamp = currTimeStamp;           
-      console.log('toJson contain: ', this.game.toJson);
+      console.log('toJson contain: ', this.gameOverview.toJson);
       
       
-      const docRef = await addDoc(collection(this.firestore, 'games'), this.game.toJson());
+      const docRef = await addDoc(collection(this.firestore, 'games'), this.gameOverview.toJson());
       this.gameId = docRef.id; 
       console.log('New Doc with ID: ', docRef.id);
       console.log('timeStamp: ', currTimeStamp);
