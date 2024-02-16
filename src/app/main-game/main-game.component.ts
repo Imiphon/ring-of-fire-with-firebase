@@ -47,7 +47,7 @@ export class MainGameComponent {
       this.firestoreService.saveGame(this.game).then(gameId => {
         this.gameIdDisplay = gameId; 
       });
-    //this.firestoreService.deleteOldGames();
+    this.firestoreService.deleteOldGames();
     this.firestoreService.singleGameReference();
   }
 
@@ -73,7 +73,7 @@ export class MainGameComponent {
       .subscribe(name => {
         this.game.players.push(name);
         //Update inside the callback to get it DIRECTLY to firebase cloud
-        this.firestoreService.updateFireGame(this.game); 
+        this.firestoreService.updateFirebase(this.game); 
       });      
   }
 }

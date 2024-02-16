@@ -24,10 +24,11 @@ export class FirestoreService {
     this.gameOverview = newGame;   
     if (this.gameId == '') {
       let newTimestamp = Timestamp.now().toMillis();
-      newGame.timeStamp = newTimestamp;
+      newGame.timeStamp = newTimestamp;      
       const docRef = await addDoc(collection(this.firestore, 'games'), this.gameOverview.toJson());
       this.gameId = docRef.id; 
-      console.log(docRef);
+      this.gameOverview.id = this.gameId;
+      this.updateFirebase(this.gameOverview);
       return this.gameId;     
     } else {
       const gameRef = doc(this.firestore, 'games', this.gameId);
@@ -47,18 +48,18 @@ export class FirestoreService {
     return currentGame
   }
 
-  async updateFireGame(updateGame: Game) {
+  async updateFirebase(updateGame: Game) {
+    this.gameOverview = updateGame;
     try {
       if (this.gameId) { 
-        debugger;
-       const gameRef = doc(this.firestore, 'games', this.gameId);        
+       const firebaseRef = doc(this.firestore, 'games', this.gameId);        
         let newTimestamp = Timestamp.now().toMillis();
         this.gameOverview.timeStamp = newTimestamp;
         
         // set without merge will overwrite a document or create it if it doesn't exist yet
         // set with merge will update fields in the document or create it if it doesn't exists
-        await setDoc(gameRef, updateGame.toJson(), { merge: false });
-        console.log('Game with ID: ' + this.gameId + ' is updated to: ', this.gameOverview);
+        await setDoc(firebaseRef, updateGame.toJson(), { merge: false });
+        console.log('New Game with ID: ' + this.gameId + ' is updated to: ', this.gameOverview);
       } else {
         console.log('GameId does not exist.');
       }
@@ -67,22 +68,17 @@ export class FirestoreService {
     }
   }
 
-//  async deleteOldGames() {
-//    const hourAgo = Timestamp.now().toMillis() - (60 * 60 * 1000); // 60 Min in Millisec
-//    const gamesRef = collection(this.firestore, 'games');
-//    let timeNow = Timestamp.now().toMillis();    
-//    const allGames = await getDocs(collection(this.firestore, 'games'), 
-//    deleteOdld(() => {
-//      querySnapshot.forEach(async (doc) => {
-//        // await deleteDoc(doc.ref);
-//         console.log(`Das Spiel ${doc.id} könnte gelöscht werden, da es zu alt ist.`);
-//       });
-//    }));
-//    querySnapshot.forEach(async (doc) => {
-//     // await deleteDoc(doc.ref);
-//      console.log(`Spiel ${doc.id} könnte gelöscht werden, da es zu alt ist.`);
-//    });
-//  }
+  async deleteOldGames() {
+    const hourAgo = Timestamp.now().toMillis() - (3 * 60 * 1000); 
+    const gamesRef = collection(this.firestore, 'games');
+    const oldGame = query(gamesRef, where('timeStamp', '<=', hourAgo));
+  
+    const gameToDelete = await getDocs(oldGame);
+    gameToDelete.forEach(async (document) => {
+      await deleteDoc(doc(this.firestore, 'games', document.id));
+      console.log(`Spiel ${document.id} wurde gelöscht, da es älter als eine Stunde ist.`);
+    });
+  }
 
   async checkGameExists(gameId: string): Promise<boolean> {
     const gameRef = doc(this.firestore, 'games', gameId);
