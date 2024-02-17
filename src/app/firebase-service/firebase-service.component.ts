@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, onSnapshot, doc, addDoc, getDocs, setDoc, updateDoc, deleteDoc, query, where, Timestamp, getDoc} from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, onSnapshot, doc, addDoc, getDocs, setDoc, updateDoc, deleteDoc, query, where, Timestamp, getDoc } from '@angular/fire/firestore';
 import { Game } from "./../../game";
 import { Unsubscribe } from '@firebase/firestore';
 
@@ -12,24 +12,17 @@ export class FirestoreService {
   gameOverview!: Game;
   gameId: string = '';
 
-  constructor(private firestore: Firestore) {       
+  constructor(private firestore: Firestore) {
   }
 
-  setNewOverview(newDatas: Game){
-    this.gameOverview.players = newDatas.players;
-    this.gameOverview.stack = newDatas.stack;
-    this.gameOverview.playedCards = newDatas.playedCards;
-    this.gameOverview.currentPlayerId = newDatas.currentPlayerId;
-    this.gameOverview.timeStamp = newDatas.timeStamp;  
-  }
-
-  public initGameListener() {    
+  public initGameListener(gameId:string, updateCallback: (gameDatas: Game) => void) {
+    this.gameId = gameId;
     if (this.gameId) {
       this.singleGame = onSnapshot(doc(this.firestore, 'games', this.gameId), (documentSnapshot) => {
         if (documentSnapshot.exists()) {
           console.log("Current data: ", documentSnapshot.data());
-          const gameData = documentSnapshot.data() as Game; // Konvertiert die Snapshot-Daten in den Typ Game
-        this.setNewOverview(gameData);
+          const firebaseDatas = documentSnapshot.data() as Game; // Konvertiert die Snapshot-Daten in den Typ Game
+          updateCallback(firebaseDatas); 
         } else {
           console.log("No such document!");
         }
@@ -41,18 +34,16 @@ export class FirestoreService {
     }
   }
 
-  async saveGame(newGame: Game): Promise<string> { 
-    debugger;
+  async saveGame(newGame: Game): Promise<string> {
     if (this.gameId == '') {
       let newTimestamp = Timestamp.now().toMillis();
-      newGame.timeStamp = newTimestamp;      
+      newGame.timeStamp = newTimestamp;
       const docRef = await addDoc(collection(this.firestore, 'games'), newGame.toJson());
-      this.gameId = docRef.id; 
+      this.gameId = docRef.id;
       this.gameOverview = newGame;
       this.gameOverview.id = this.gameId;
       this.updateFirebase(this.gameOverview);
-      this.initGameListener();   
-      return this.gameId;        
+      return this.gameId;
     } else {
       const gameRef = doc(this.firestore, 'games', this.gameId);
       await setDoc(gameRef, this.gameOverview.toJson(), { merge: true });
@@ -74,11 +65,11 @@ export class FirestoreService {
   async updateFirebase(updateGame: Game) {
     this.gameOverview = updateGame;
     try {
-      if (this.gameId) { 
-       const firebaseRef = doc(this.firestore, 'games', this.gameId);        
+      if (this.gameId) {
+        const firebaseRef = doc(this.firestore, 'games', this.gameId);
         let newTimestamp = Timestamp.now().toMillis();
         this.gameOverview.timeStamp = newTimestamp;
-        
+
         // set without merge will overwrite a document or create it if it doesn't exist yet
         // set with merge will update fields in the document or create it if it doesn't exists
         await setDoc(firebaseRef, updateGame.toJson(), { merge: false });
@@ -92,10 +83,10 @@ export class FirestoreService {
   }
 
   async deleteOldGames() {
-    const hourAgo = Timestamp.now().toMillis() - (30 * 60 * 1000); 
+    const hourAgo = Timestamp.now().toMillis() - (30 * 60 * 1000);
     const gamesRef = collection(this.firestore, 'games');
     const oldGame = query(gamesRef, where('timeStamp', '<=', hourAgo));
-  
+
     const gameToDelete = await getDocs(oldGame);
     gameToDelete.forEach(async (document) => {
       await deleteDoc(doc(this.firestore, 'games', document.id));

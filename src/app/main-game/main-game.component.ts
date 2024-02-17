@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
-import { RouterOutlet } from '@angular/router'; 
+import { RouterOutlet, ActivatedRoute } from '@angular/router'; 
 import { Game } from "./../../game";
 import { PlayerComponent } from "./../player/player.component";
 import { DialogAddPlayerComponent } from "./../dialog-add-player/dialog-add-player.component";
@@ -36,12 +36,30 @@ export class MainGameComponent {
   public currentCard: string = '';
   public gameIdDisplay: string = '';
 
-  constructor(public dialog: MatDialog, private firestoreService: FirestoreService) {
+  constructor(public dialog: MatDialog, private firestoreService: FirestoreService, private route: ActivatedRoute) {
+  }
+
+  setNewOverview(newDatas: Game) {
+    this.game.players = newDatas.players;
+    this.game.stack = newDatas.stack;
+    this.game.playedCards = newDatas.playedCards;
+    this.game.currentPlayerId = newDatas.currentPlayerId;
+    this.game.timeStamp = newDatas.timeStamp;
   }
 
   ngOnInit() {
-    this.newGame();
-    debugger;
+    this.route.paramMap.subscribe(parameters => {
+      let gameId = parameters.get('gameId');
+      if(gameId){
+       this.firestoreService.initGameListener(
+        gameId, this.setNewOverview.bind(this)
+       );
+        this.gameIdDisplay = gameId; 
+        console.log('got gameId: ', gameId);
+      } else {
+        this.newGame();
+      }
+    });    
   }
 
   newGame() {
