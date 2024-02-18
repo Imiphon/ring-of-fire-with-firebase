@@ -30,7 +30,7 @@
     right: 32px;
     @include btnStyle();
     @include gold-bgr();
-
+    @include dFlex();
 }
 
 .cardboard-frame {

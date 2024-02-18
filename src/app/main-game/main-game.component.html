@@ -37,7 +37,10 @@
     </div>
 
     <div class="gameId-frame">
-        Game ID: {{gameIdDisplay}}
+        Get the ID to invide your friends.
+        <button mat-icon-button (click)="copyId(gameIdDisplay)">
+            <mat-icon>content_copy</mat-icon>
+        </button>
     </div>
 
     <app-game-info class="info-card" [card] = "currentCard">

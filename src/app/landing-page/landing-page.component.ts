@@ -5,6 +5,7 @@ import { FirestoreService } from "./../firebase-service/firebase-service.compone
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { FormsModule } from '@angular/forms';
 import { Game } from "./../../game";
 
@@ -30,16 +31,20 @@ export class LandingPageComponent {
   gameId: string = '';
   game!: Game;
 
-  constructor(private firestoreService: FirestoreService, private router: Router) {
+  constructor(
+    private firestoreService: FirestoreService, 
+    private router: Router,
+    private snackBar: MatSnackBar) {
 
   }
   async joinGame() {
     const gameExists = await this.firestoreService.checkGameExists(this.gameId);
-    if (gameExists) { 
-      this.firestoreService.gameId = this.gameId;              
+    if (gameExists) {           
       this.router.navigate(['/gameStart/', this.gameId]);        
     } else {
-      alert('Game ID does not exist.'); 
+      this.snackBar.open(`ID doesn't exists!`, 'close', {
+        duration: 3000, // duration 3 sec
+      });
     }
   }
 }

@@ -44,7 +44,7 @@ export class FirestoreService {
       this.gameOverview.id = this.gameId;
       this.updateFirebase(this.gameOverview);
       return this.gameId;
-    } else {
+    } else {  //ready to delete???
       const gameRef = doc(this.firestore, 'games', this.gameId);
       await setDoc(gameRef, this.gameOverview.toJson(), { merge: true });
       return this.gameId;

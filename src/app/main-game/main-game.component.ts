@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { GameInfoComponent } from "./../game-info/game-info.component";
 import { FirestoreService } from "./../firebase-service/firebase-service.component";
 
@@ -23,7 +24,7 @@ import { FirestoreService } from "./../firebase-service/firebase-service.compone
     MatButtonModule,
     MatDialogModule,
     GameInfoComponent,
-    MatCardModule
+    MatCardModule,
   ],
   templateUrl: './main-game.component.html',
   styleUrl: './main-game.component.scss'
@@ -36,7 +37,17 @@ export class MainGameComponent {
   public currentCard: string = '';
   public gameIdDisplay: string = '';
 
-  constructor(public dialog: MatDialog, private firestoreService: FirestoreService, private route: ActivatedRoute) {
+  constructor(
+    public dialog: MatDialog, 
+    private firestoreService: FirestoreService, 
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar) {
+  }
+
+  ngOnInit() {    
+    this.sortNewOrOld();
+    this.firestoreService.deleteOldGames();
+    this.firestoreService.singleGameReference();  
   }
 
   setNewOverview(newDatas: Game) {
@@ -47,7 +58,7 @@ export class MainGameComponent {
     this.game.timeStamp = newDatas.timeStamp;
   }
 
-  ngOnInit() {
+  sortNewOrOld() {
     this.route.paramMap.subscribe(parameters => {
       let gameId = parameters.get('gameId');
       if(gameId){
@@ -59,15 +70,13 @@ export class MainGameComponent {
       } else {
         this.newGame();
       }
-    });    
+    });
   }
 
   newGame() {
       this.firestoreService.saveGame(this.game).then(gameId => {
         this.gameIdDisplay = gameId; 
       });
-    this.firestoreService.deleteOldGames();
-    this.firestoreService.singleGameReference();
   }
 
   takeCard() {
@@ -83,6 +92,7 @@ export class MainGameComponent {
       this.game.currentPlayerId++;
       if (this.game.currentPlayerId == this.game.players.length) this.game.currentPlayerId = 0;
     }, 1300);
+    this.firestoreService.updateFirebase(this.game); 
   }
 
   openDialog(): void {
@@ -91,8 +101,19 @@ export class MainGameComponent {
       .afterClosed()
       .subscribe(name => {
         this.game.players.push(name);
-        //Update inside the callback to get it DIRECTLY to firebase cloud
+        //Update inside the callback to set it DIRECTLY to firebase cloud
         this.firestoreService.updateFirebase(this.game); 
       });      
   }
+
+  copyId(gameIdDisplay:string): void {
+    navigator.clipboard.writeText(gameIdDisplay).then(() => {
+      this.snackBar.open('Paste it to yor invitation!', 'Schließen', {
+        duration: 3000, // duration 2 sec
+      });
+    }, (err) =>{
+        console.error('Da lief was schief! ', err);
+      });
+  }
+
 }
