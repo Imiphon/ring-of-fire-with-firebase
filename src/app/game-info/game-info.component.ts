@@ -39,8 +39,7 @@ export class GameInfoComponent {
   ngOnInit() { }
 
   ngOnChanges(): void {
-    if(this.game){
-
+    
     this.number = +this.card.split('_')[1];
 
     // check if index != NaN
@@ -52,6 +51,5 @@ export class GameInfoComponent {
       this.game.description = this.description;
       }
     }
-  }
 
 }
