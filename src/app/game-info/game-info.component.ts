@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 
+import { Game } from "./../../game";
+
 @Component({
   selector: 'app-game-info',
   standalone: true,
@@ -30,19 +32,25 @@ export class GameInfoComponent {
   description: string = '';
   number: number = 0;
   @Input() card: string = '';
+  game!: Game;
 
   constructor() { }
 
   ngOnInit() { }
 
   ngOnChanges(): void {
+    if(this.game){
+
     this.number = +this.card.split('_')[1];
 
     // check if index != NaN
     if (this.number >= 0 && this.number <= this.cardAction.length) {
       this.cardTitel = this.cardAction[this.number - 1].title;
       this.description = this.cardAction[this.number - 1].description;
-      // console.log(this.cardAction[this.number - 1].title);
+      
+      this.game.cardTitle = this.cardTitel;
+      this.game.description = this.description;
+      }
     }
   }
 

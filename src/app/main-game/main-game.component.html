@@ -25,7 +25,7 @@
             style="right:15px" alt="">
 
         <!-- animation -->
-        <img *ngIf="pickCardAnimation" [ngStyle]="{ 'right.px': 15 }"
+        <img *ngIf="game.pickCardAnimation" [ngStyle]="{ 'right.px': 15 }"
             src="assets/images/playing_cards/{{ currentCard }}.png" class="pick-card" alt="currentCard">
     </div>
     <div class="add-btn">
@@ -37,8 +37,8 @@
     </div>
 
     <div class="gameId-frame">
-        Get the ID to invide your friends.
-        <button mat-icon-button (click)="copyId(gameIdDisplay)">
+        Copy ID <b>{{gameIdDisplay}}</b> for your friends.
+        <button mat-icon-button (click)="copyId(gameIdDisplay)">            
             <mat-icon>content_copy</mat-icon>
         </button>
     </div>

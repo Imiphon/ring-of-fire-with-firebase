@@ -31,8 +31,7 @@ import { FirestoreService } from "./../firebase-service/firebase-service.compone
 })
 
 export class MainGameComponent {
-  public pickCardAnimation = false;
-  //shows all cards in stack, all players
+  //public pickCardAnimation = false;
   public game: Game = new Game();
   public currentCard: string = '';
   public gameIdDisplay: string = '';
@@ -56,6 +55,7 @@ export class MainGameComponent {
     this.game.playedCards = newDatas.playedCards;
     this.game.currentPlayerId = newDatas.currentPlayerId;
     this.game.timeStamp = newDatas.timeStamp;
+    this.game.pickCardAnimation = newDatas.pickCardAnimation;
   }
 
   sortNewOrOld() {
@@ -68,31 +68,28 @@ export class MainGameComponent {
         this.gameIdDisplay = gameId; 
         console.log('got gameId: ', gameId);
       } else {
-        this.newGame();
+        this.firestoreService.saveNewGame(this.game).then(gameId => {
+          this.gameIdDisplay = gameId; 
+        });
       }
     });
   }
 
-  newGame() {
-      this.firestoreService.saveGame(this.game).then(gameId => {
-        this.gameIdDisplay = gameId; 
-      });
-  }
-
   takeCard() {
-    if (!this.pickCardAnimation) {
+    if (!this.game.pickCardAnimation) {
       this.currentCard = this.game.stack.pop()!;
-      this.pickCardAnimation = true;
+      this.game.pickCardAnimation = true;
+      this.firestoreService.updateFirebase(this.game); 
      // let currentName: string = this.game.players[this.game.currentPlayerId];
     }
     setTimeout(() => {
       this.game.playedCards.push(this.currentCard);
-      this.pickCardAnimation = false;
-
+      this.game.pickCardAnimation = false;
       this.game.currentPlayerId++;
       if (this.game.currentPlayerId == this.game.players.length) this.game.currentPlayerId = 0;
+      this.firestoreService.updateFirebase(this.game); 
     }, 1300);
-    this.firestoreService.updateFirebase(this.game); 
+    
   }
 
   openDialog(): void {

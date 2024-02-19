@@ -34,7 +34,7 @@ export class FirestoreService {
     }
   }
 
-  async saveGame(newGame: Game): Promise<string> {
+  async saveNewGame(newGame: Game): Promise<string> {
     if (this.gameId == '') {
       let newTimestamp = Timestamp.now().toMillis();
       newGame.timeStamp = newTimestamp;
@@ -52,7 +52,9 @@ export class FirestoreService {
   }
 
   singleGameReference() {
-    const currentGame = onSnapshot(doc(this.firestore, "games", this.gameId), (doc) => {
+    console.log('singleGameReferenz starts');
+    
+    const currentGame = onSnapshot(doc(this.firestore, 'games', this.gameId), (doc) => {
       if (doc.exists()) {
         console.log("Aktuelle Daten: ", doc.data());
       } else {
@@ -73,7 +75,7 @@ export class FirestoreService {
         // set without merge will overwrite a document or create it if it doesn't exist yet
         // set with merge will update fields in the document or create it if it doesn't exists
         await setDoc(firebaseRef, updateGame.toJson(), { merge: false });
-        console.log('New Game with ID: ' + this.gameId + ' is updated to: ', this.gameOverview);
+        console.log('Game with ID: ' + this.gameId + ' is updated to: ', this.gameOverview);
       } else {
         console.log('GameId does not exist.');
       }
@@ -83,7 +85,9 @@ export class FirestoreService {
   }
 
   async deleteOldGames() {
-    const hourAgo = Timestamp.now().toMillis() - (30 * 60 * 1000);
+    console.log('deleteOldGames() works.');
+    
+    const hourAgo = Timestamp.now().toMillis() - (3 * 60 * 1000);
     const gamesRef = collection(this.firestore, 'games');
     const oldGame = query(gamesRef, where('timeStamp', '<=', hourAgo));
 
@@ -102,24 +106,5 @@ export class FirestoreService {
     }
     return docSnap.exists();
   }
+
 }
-
-/**
- * //Get infos for all documents
-    private initGameListener() {
-    const gameRef = this.gameReference(); // = 'games' on firebase
-    this.singleGame = onSnapshot(gameRef, (snapshot) => {
-      // Iteration over each collection in games and action
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        //console.log('current game with onSnapshot: ', data);
-      });
-    });
-  }
-
-  gameReference() {
-    return collection(this.firestore, 'games');
-  }
- */
-
-
