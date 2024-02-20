@@ -70,6 +70,10 @@ export class MainGameComponent implements AfterViewInit {
       const gameId = await this.firestoreService.saveNewGame(this.game);
       if (gameId) {
         this.gameIdDisplay = this.firestoreService.gameId;
+
+        this.firestoreService.initGameListener(          
+          gameId, this.setNewOverview.bind(this)
+        );
       }
     } catch (error) {
       console.error("Fehler beim Initialisieren des Spiels: ", error);
@@ -87,7 +91,7 @@ export class MainGameComponent implements AfterViewInit {
         this.gameIdDisplay = gameId;
         console.log('got gameId: ', gameId);
       } else {
-        this.initGame();
+        this.initGame();        
       }
     });
   }
