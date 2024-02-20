@@ -50,7 +50,8 @@ export class FirestoreService {
       return this.gameId;
     } else {  
       const gameRef = doc(this.firestore, 'games', this.gameId);
-      await setDoc(gameRef, this.gameOverview.toJson(), { merge: true });
+      await this.updateFirebase(newGame);
+      //await setDoc(gameRef, this.gameOverview.toJson(), { merge: true });
       return this.gameId;
     }
   }

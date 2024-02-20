@@ -35,38 +35,35 @@ export class GameInfoComponent {
   @Input() card: string = ''; //If any changes here then ngOnChanges() is calling
   game!: Game;
 
-  constructor(
-    private firestoreService: FirestoreService,
-  ) { }
+  constructor(private firestoreService: FirestoreService) { }
 
   ngOnInit() { }
 
-  ngOnChanges(): void {
+  giveNewCardInfo() {
     this.number = +this.card.split('_')[1];
 
-    if (this.number >= 0 && this.number <= this.cardAction.length) {
-      this.cardTitle = this.cardAction[this.number - 1].title;
-      this.description = this.cardAction[this.number - 1].description;
-      this.firestoreService.updateCardInfo(this.cardTitle, this.description);
-      //this.firestoreService.updateFirebase(this.game);
-    }
-  }
-
-  /**
-   * 
-    giveNewCardInfo() {
-    console.log('giveNewCardInfo() starts');
-
-    this.number = +this.card.split('_')[1];
-
+    // check if index != NaN
     if (this.number >= 0 && this.number <= this.cardAction.length && this.game) {
       this.game.cardTitle = this.cardAction[this.number - 1].title;
       this.game.description = this.cardAction[this.number - 1].description;
-      //this.firestoreService.updateCardInfo(this.cardTitle, this.description);
-      this.firestoreService.updateFirebase(this.game);
     }
+
   }
-   */
+
+  ngOnChanges(): void {
+    
+    this.number = +this.card.split('_')[1];
+     // check if index != NaN
+    if (this.number >= 0 && this.number <= this.cardAction.length) {
+      this.cardTitle = this.cardAction[this.number - 1].title;
+      this.description = this.cardAction[this.number - 1].description;
+      this.updateGameInfo()
+      }
+    }
+     updateGameInfo() {
+      //this.game.updateCardInfo(cardTitle, description); // Aktualisiert die lokale Instanz
+      this.firestoreService.updateCardInfo(this.cardTitle, this.description); // Aktualisiert Firestore
+    }
 }
 
 
