@@ -8,8 +8,8 @@ export class Game {
     public currentPlayerId: number = 0;
     public timeStamp: number = 0;
     public pickCardAnimation: boolean = false;
-    public cardTitle?: string;
-    public description?: string;
+    public cardTitle!: string;
+    public description!: string;
 
     constructor() {
         for (let i = 1; i < 14; i++) {
@@ -22,8 +22,6 @@ export class Game {
     }
 
     toJson() {
-        console.log('description: ', this.cardTitle, this.description);
-        
         return {
             players: this.players,
             stack: this.stack,
@@ -31,13 +29,11 @@ export class Game {
             currentPlayerId: this.currentPlayerId,
             timeStamp: this.timeStamp,
             pickCardAnimation: this.pickCardAnimation,
-            //cardTitle: this.cardTitle,
-            //description: this.description            
+            cardTitle: this.cardTitle || 'Title',
+            description: this.description || 'Description'
         }
     }
 }
-
-
 
 /**
  * Implementation of fisher-yates-shuffle-algorythm
@@ -51,7 +47,6 @@ function shuffle(array: string[]): string[] {
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex -= 1;
 
-        //
         temporaryValue = array[currentIndex];
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;

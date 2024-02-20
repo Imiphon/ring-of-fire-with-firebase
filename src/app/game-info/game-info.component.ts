@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { FirestoreService } from "./../firebase-service/firebase-service.component";
 
 import { Game } from "./../../game";
 
@@ -28,28 +29,44 @@ export class GameInfoComponent {
     { title: 'Rule', description: 'Make a rule. Everyone needs to drink when he breaks the rule.' },
   ];
 
-  cardTitel: string = 'Card Titles';
-  description: string = '';
+  cardTitle: string = 'InfoCard Titles';
+  description: string = 'Pick a card and follow instructions.';
   number: number = 0;
-  @Input() card: string = '';
+  @Input() card: string = ''; //If any changes here then ngOnChanges() is calling
   game!: Game;
 
-  constructor() { }
+  constructor(
+    private firestoreService: FirestoreService,
+  ) { }
 
   ngOnInit() { }
 
   ngOnChanges(): void {
-    
     this.number = +this.card.split('_')[1];
 
-    // check if index != NaN
     if (this.number >= 0 && this.number <= this.cardAction.length) {
-      this.cardTitel = this.cardAction[this.number - 1].title;
+      this.cardTitle = this.cardAction[this.number - 1].title;
       this.description = this.cardAction[this.number - 1].description;
-      
-      this.game.cardTitle = this.cardTitel;
-      this.game.description = this.description;
-      }
+      this.firestoreService.updateCardInfo(this.cardTitle, this.description);
+      //this.firestoreService.updateFirebase(this.game);
     }
+  }
 
+  /**
+   * 
+    giveNewCardInfo() {
+    console.log('giveNewCardInfo() starts');
+
+    this.number = +this.card.split('_')[1];
+
+    if (this.number >= 0 && this.number <= this.cardAction.length && this.game) {
+      this.game.cardTitle = this.cardAction[this.number - 1].title;
+      this.game.description = this.cardAction[this.number - 1].description;
+      //this.firestoreService.updateCardInfo(this.cardTitle, this.description);
+      this.firestoreService.updateFirebase(this.game);
+    }
+  }
+   */
 }
+
+

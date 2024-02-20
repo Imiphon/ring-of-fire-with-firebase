@@ -16,12 +16,16 @@ export class FirestoreService {
   }
 
   public initGameListener(gameId:string, updateCallback: (gameDatas: Game) => void) {
+    console.log('initGameListener starts');
+    
     this.gameId = gameId;
     if (this.gameId) {
       this.singleGame = onSnapshot(doc(this.firestore, 'games', this.gameId), (documentSnapshot) => {
         if (documentSnapshot.exists()) {
           console.log("Current data: ", documentSnapshot.data());
-          const firebaseDatas = documentSnapshot.data() as Game; // Konvertiert die Snapshot-Daten in den Typ Game
+          console.log('current Title: ', documentSnapshot.data()['cardTitle']);
+          
+          const firebaseDatas = documentSnapshot.data() as Game; 
           updateCallback(firebaseDatas); 
         } else {
           console.log("No such document!");
@@ -44,24 +48,11 @@ export class FirestoreService {
       this.gameOverview.id = this.gameId;
       this.updateFirebase(this.gameOverview);
       return this.gameId;
-    } else {  //ready to delete???
+    } else {  
       const gameRef = doc(this.firestore, 'games', this.gameId);
       await setDoc(gameRef, this.gameOverview.toJson(), { merge: true });
       return this.gameId;
     }
-  }
-
-  singleGameReference() {
-    console.log('singleGameReferenz starts');
-    
-    const currentGame = onSnapshot(doc(this.firestore, 'games', this.gameId), (doc) => {
-      if (doc.exists()) {
-        console.log("Aktuelle Daten: ", doc.data());
-      } else {
-        console.log("Dokument existiert nicht!");
-      }
-    });
-    return currentGame
   }
 
   async updateFirebase(updateGame: Game) {
@@ -75,13 +66,18 @@ export class FirestoreService {
         // set without merge will overwrite a document or create it if it doesn't exist yet
         // set with merge will update fields in the document or create it if it doesn't exists
         await setDoc(firebaseRef, updateGame.toJson(), { merge: false });
-        console.log('Game with ID: ' + this.gameId + ' is updated to: ', this.gameOverview);
       } else {
         console.log('GameId does not exist.');
       }
     } catch (error) {
       console.error('Error in update: ', error);
     }
+  }
+
+  async updateCardInfo(cardTitle: string, description: string) {
+    const gameRef = doc(this.firestore, 'games', this.gameId);
+    await updateDoc(gameRef, { cardTitle, description });
+    console.log(cardTitle, description);    
   }
 
   async deleteOldGames() {
@@ -106,5 +102,4 @@ export class FirestoreService {
     }
     return docSnap.exists();
   }
-
 }
