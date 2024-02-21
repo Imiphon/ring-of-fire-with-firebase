@@ -11,7 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { GameInfoComponent } from "./../game-info/game-info.component";
-import { FirestoreService } from "./../firebase-service/firebase-service.component";
+import { FirestoreService } from "../firebase-service/firebase-service";
 
 @Component({
   selector: 'app-main-game',
@@ -37,23 +37,22 @@ export class MainGameComponent implements AfterViewInit {
   public currentCard: string = '';
   public gameIdDisplay: string = '';
 
+
   constructor(
     public dialog: MatDialog,
     private firestoreService: FirestoreService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
     private router: Router
-    ) {  }
+  ) { }
 
   ngOnInit() {
     this.sortNewOrOld();
     this.firestoreService.deleteOldGames();
-    this.firestoreService.onGameUpdated.subscribe((game: Game) => {
-      if(this.game.changeNow){
-        this.takeCard();
-      }
-      
-    })
+
+    this.firestoreService.gameTrigger.subscribe(triggeredGame => {
+      this.setNewOverview(triggeredGame);
+    });
   }
 
   ngAfterViewInit(): void {
@@ -64,6 +63,7 @@ export class MainGameComponent implements AfterViewInit {
     this.game.players = newDatas.players;
     this.game.stack = newDatas.stack;
     this.game.playedCards = newDatas.playedCards;
+    this.game.currentCard = newDatas.currentCard;
     this.game.currentPlayerId = newDatas.currentPlayerId;
     this.game.timeStamp = newDatas.timeStamp;
     this.game.pickCardAnimation = newDatas.pickCardAnimation;
@@ -79,7 +79,7 @@ export class MainGameComponent implements AfterViewInit {
       if (gameId) {
         this.gameIdDisplay = this.firestoreService.gameId;
 
-        this.router.navigate(['/gameStart/', gameId]); 
+        this.router.navigate(['/gameStart/', gameId]);
 
         this.firestoreService.initGameListener(
           gameId, this.setNewOverview.bind(this)
@@ -107,7 +107,9 @@ export class MainGameComponent implements AfterViewInit {
 
   takeCard() {
     if (!this.game.pickCardAnimation) {
+      
       this.currentCard = this.game.stack.pop()!;
+      this.game.currentCard = this.currentCard;
       this.game.pickCardAnimation = true;
       this.game.changeNow = true;
       //this.ngAfterViewInit();

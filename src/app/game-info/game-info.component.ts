@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { FirestoreService } from "./../firebase-service/firebase-service.component";
+import { FirestoreService } from "./../firebase-service/firebase-service";
 
 import { Game } from "./../../game";
 

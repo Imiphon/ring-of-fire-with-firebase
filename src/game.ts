@@ -11,6 +11,7 @@ export class Game {
     public cardTitle!: string;
     public description!: string;
     public changeNow: boolean = false;
+    public currentCard: string = '';
 
     constructor() {
         for (let i = 1; i < 14; i++) {

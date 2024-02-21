@@ -1,20 +1,25 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Firestore, collection, onSnapshot, doc, addDoc, getDocs, setDoc, updateDoc, deleteDoc, query, where, Timestamp, getDoc } from '@angular/fire/firestore';
-import { Game } from "./../../game";
+import { Game } from "../../game";
 import { Unsubscribe } from '@firebase/firestore';
+import { Subject } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
-}) //makes this component global
+}) //makes this SERVICE global
 
 export class FirestoreService {
   // EventEmitter sends an event if game is updated
-  public onGameUpdated: EventEmitter<Game> = new EventEmitter();
   singleGame?: Unsubscribe;
   game!: Game;
   gameId: string = '';
-
+  gameTrigger = new Subject<any>(); 
   constructor(private firestore: Firestore) {
+  }
+
+  //besser eigener Name? wie 'triggertGame'
+  serviceMethod(game: Game) {
+    this.gameTrigger.next(game)
   }
 
   public initGameListener(gameId: string, updateCallback: (gameDatas: Game) => void) {
@@ -26,8 +31,7 @@ export class FirestoreService {
           const firebaseDatas = documentSnapshot.data() as Game;
           updateCallback(firebaseDatas);
           if (this.game && this.game.changeNow) {
-            // starts event for MainGameComponent.changeCard()
-            this.onGameUpdated.emit(firebaseDatas); 
+            this.serviceMethod(this.game);
           }
         } else {
           console.log("No such document!");
