@@ -1,6 +1,6 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, ActivatedRoute } from '@angular/router';
+import { RouterOutlet, ActivatedRoute, Router } from '@angular/router';
 import { Game } from "./../../game";
 import { PlayerComponent } from "./../player/player.component";
 import { DialogAddPlayerComponent } from "./../dialog-add-player/dialog-add-player.component";
@@ -41,12 +41,19 @@ export class MainGameComponent implements AfterViewInit {
     public dialog: MatDialog,
     private firestoreService: FirestoreService,
     private route: ActivatedRoute,
-    private snackBar: MatSnackBar) {
-  }
+    private snackBar: MatSnackBar,
+    private router: Router
+    ) {  }
 
   ngOnInit() {
     this.sortNewOrOld();
     this.firestoreService.deleteOldGames();
+    this.firestoreService.onGameUpdated.subscribe((game: Game) => {
+      if(this.game.changeNow){
+        this.takeCard();
+      }
+      
+    })
   }
 
   ngAfterViewInit(): void {
@@ -62,16 +69,19 @@ export class MainGameComponent implements AfterViewInit {
     this.game.pickCardAnimation = newDatas.pickCardAnimation;
     this.game.cardTitle = newDatas.cardTitle;
     this.game.description = newDatas.description;
+    this.game.changeNow = newDatas.changeNow;
   }
 
   async initGame() {
     try {
-      //saveNewGame gives only back gameId 
+      //saveNewGame() only returns gameId 
       const gameId = await this.firestoreService.saveNewGame(this.game);
       if (gameId) {
         this.gameIdDisplay = this.firestoreService.gameId;
 
-        this.firestoreService.initGameListener(          
+        this.router.navigate(['/gameStart/', gameId]); 
+
+        this.firestoreService.initGameListener(
           gameId, this.setNewOverview.bind(this)
         );
       }
@@ -79,7 +89,6 @@ export class MainGameComponent implements AfterViewInit {
       console.error("Fehler beim Initialisieren des Spiels: ", error);
     }
   }
-
 
   sortNewOrOld() {
     this.route.paramMap.subscribe(parameters => {
@@ -91,7 +100,7 @@ export class MainGameComponent implements AfterViewInit {
         this.gameIdDisplay = gameId;
         console.log('got gameId: ', gameId);
       } else {
-        this.initGame();        
+        this.initGame();
       }
     });
   }
@@ -100,7 +109,8 @@ export class MainGameComponent implements AfterViewInit {
     if (!this.game.pickCardAnimation) {
       this.currentCard = this.game.stack.pop()!;
       this.game.pickCardAnimation = true;
-      this.ngAfterViewInit();
+      this.game.changeNow = true;
+      //this.ngAfterViewInit();
       this.firestoreService.updateFirebase(this.game);
     }
     setTimeout(() => {
@@ -108,6 +118,7 @@ export class MainGameComponent implements AfterViewInit {
       this.game.pickCardAnimation = false;
       this.game.currentPlayerId++;
       if (this.game.currentPlayerId == this.game.players.length) this.game.currentPlayerId = 0;
+      this.game.changeNow = false;
       this.firestoreService.updateFirebase(this.game);
     }, 1300);
     //this.gameInfoComponent.giveNewCardInfo();
@@ -126,12 +137,11 @@ export class MainGameComponent implements AfterViewInit {
 
   copyId(gameIdDisplay: string): void {
     navigator.clipboard.writeText(gameIdDisplay).then(() => {
-      this.snackBar.open('Paste it to yor invitation!', 'Schließen', {
+      this.snackBar.open('Paste it to yor invitation!', 'Close', {
         duration: 3000, // duration 2 sec
       });
     }, (err) => {
-      console.error('Da lief was schief! ', err);
+      console.error('Sorry, something went wrong! ', err);
     });
   }
-
 }

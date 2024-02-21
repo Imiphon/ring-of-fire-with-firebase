@@ -35,8 +35,8 @@ export class LandingPageComponent {
     private firestoreService: FirestoreService, 
     private router: Router,
     private snackBar: MatSnackBar) {
-
   }
+  
   async joinGame() {
     const gameExists = await this.firestoreService.checkGameExists(this.gameId);
     if (gameExists) {           

@@ -10,6 +10,7 @@ export class Game {
     public pickCardAnimation: boolean = false;
     public cardTitle!: string;
     public description!: string;
+    public changeNow: boolean = false;
 
     constructor() {
         for (let i = 1; i < 14; i++) {
@@ -30,7 +31,8 @@ export class Game {
             timeStamp: this.timeStamp,
             pickCardAnimation: this.pickCardAnimation,
             cardTitle: this.cardTitle || 'Title',
-            description: this.description || 'Description'
+            description: this.description || 'Description',
+            changeNow: this.changeNow
         }
     }
 }
