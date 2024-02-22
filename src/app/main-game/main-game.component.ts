@@ -56,7 +56,7 @@ export class MainGameComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.gameInfoComponent.giveNewCardInfo();
+    //this.gameInfoComponent.giveNewCardInfo();
   }
 
   setNewOverview(newDatas: Game) {
@@ -71,6 +71,7 @@ export class MainGameComponent implements AfterViewInit {
     this.game.cardTitle = newDatas.cardTitle;
     this.game.description = newDatas.description;
     this.game.changeNow = newDatas.changeNow;
+    this.currentCard = newDatas.currentCard;
   }
 
   async initGame() {
@@ -113,7 +114,7 @@ export class MainGameComponent implements AfterViewInit {
       this.game.currentCard = this.currentCard;
       this.game.pickCardAnimation = true;
       this.game.changeNow = true;
-      this.ngAfterViewInit();
+      //this.ngAfterViewInit();
       this.firestoreService.updateFirebase(this.game);
     }
     setTimeout(() => {
