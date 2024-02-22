@@ -25,8 +25,10 @@ export class Game {
 
     toJson() {
         return {
+            id: this.id,
             players: this.players,
             stack: this.stack,
+            currentCard: this.currentCard,
             playedCards: this.playedCards,
             currentPlayerId: this.currentPlayerId,
             timeStamp: this.timeStamp,

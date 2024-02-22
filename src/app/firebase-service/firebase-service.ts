@@ -22,14 +22,15 @@ export class FirestoreService {
     this.gameTrigger.next(game)
   }
 
-  public initGameListener(gameId: string, updateCallback: (gameDatas: Game) => void) {
+  public async initGameListener(gameId: string, updateCallback: (gameDatas: Game) => void) {
     this.gameId = gameId;
-    if (this.gameId) {
+    if (this.gameId) {      
       this.singleGame = onSnapshot(doc(this.firestore, 'games', this.gameId), (documentSnapshot) => {
         if (documentSnapshot.exists()) {
-          console.log("Current data: ", documentSnapshot.data());
           const firebaseDatas = documentSnapshot.data() as Game;
           updateCallback(firebaseDatas);
+          console.log('after updateCallback', firebaseDatas);
+          this.game = firebaseDatas;
           if (this.game && this.game.changeNow) {
             this.serviceMethod(this.game);
           }

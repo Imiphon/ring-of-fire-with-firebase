@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, ActivatedRoute, Router } from '@angular/router';
 import { Game } from "./../../game";
@@ -56,10 +56,11 @@ export class MainGameComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    //this.gameInfoComponent.giveNewCardInfo();
+    this.gameInfoComponent.giveNewCardInfo();
   }
 
   setNewOverview(newDatas: Game) {
+    this.game.id = this.gameIdDisplay;
     this.game.players = newDatas.players;
     this.game.stack = newDatas.stack;
     this.game.playedCards = newDatas.playedCards;
@@ -95,7 +96,7 @@ export class MainGameComponent implements AfterViewInit {
       let gameId = parameters.get('gameId');
       if (gameId) {
         this.firestoreService.initGameListener(
-          gameId, this.setNewOverview.bind(this)
+          gameId, this.setNewOverview.bind(this)          
         );
         this.gameIdDisplay = gameId;
         console.log('got gameId: ', gameId);
@@ -112,7 +113,7 @@ export class MainGameComponent implements AfterViewInit {
       this.game.currentCard = this.currentCard;
       this.game.pickCardAnimation = true;
       this.game.changeNow = true;
-      //this.ngAfterViewInit();
+      this.ngAfterViewInit();
       this.firestoreService.updateFirebase(this.game);
     }
     setTimeout(() => {
