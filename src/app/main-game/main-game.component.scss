@@ -24,6 +24,11 @@
     @include dFlex();
 }
 
+.player-group-frame {
+position: relative;
+left: 32px;
+}
+
 .gameId-frame {
     position: absolute;
     bottom: 32px;

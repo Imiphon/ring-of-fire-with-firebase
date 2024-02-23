@@ -21,8 +21,16 @@ import { MatButtonModule } from '@angular/material/button'; // Importieren Sie M
 
 export class DialogAddPlayerComponent {
   name: string = '';
-
+  invalidName: boolean = false;
   constructor(private dialogRef: MatDialogRef<DialogAddPlayerComponent>) {}
+
+  onOkClick(): void {
+    if (!this.name.trim()) {
+      this.invalidName = true; // shows error if no Name
+    } else {
+      this.dialogRef.close(this.name);
+    }
+  }
 
   onNoClick(): void {
     this.dialogRef.close();

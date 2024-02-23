@@ -56,7 +56,6 @@ export class FirestoreService {
       this.updateFirebase(this.game);
       return this.gameId;
     } else {
-      const gameRef = doc(this.firestore, 'games', this.gameId);
       await this.updateFirebase(newGame);
       //await setDoc(gameRef, this.game.toJson(), { merge: true });
       return this.gameId;

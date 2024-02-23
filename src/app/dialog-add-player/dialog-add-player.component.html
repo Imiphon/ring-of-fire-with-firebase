@@ -1,6 +1,6 @@
-<h1 mat-dialog-title>Add new player</h1>
+<h1 mat-dialog-title>Your name.</h1>
 <div mat-dialog-content>
-    <p>Enter the name of player</p>
+    <p>Please enter your name to show your fellow players that you are there.</p>
     <mat-form-field>
       <mat-label>Name</mat-label>
       <input matInput [(ngModel)]="name">
@@ -9,5 +9,5 @@
 
   <div mat-dialog-actions>
     <button mat-button (click)="onNoClick()">No Thanks</button>
-    <button mat-button [mat-dialog-close]="name" cdkFocusInitial>Ok</button>
+    <button mat-button (click)="onOkClick()" cdkFocusInitial>Ok</button>
   </div>

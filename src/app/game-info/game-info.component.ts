@@ -45,21 +45,19 @@ export class GameInfoComponent {
     if (this.number >= 0 && this.number <= this.cardAction.length) {
       this.cardTitle = this.cardAction[this.number - 1].title;
       this.description = this.cardAction[this.number - 1].description;
-            
-      this.firestoreService.updateCardInfo(this.cardTitle, this.description);      
+
+      this.firestoreService.updateCardInfo(this.cardTitle, this.description);
     }
   }
 
- giveNewCardInfo() {
-   this.number = +this.card.split('_')[1];
-   // check if index != NaN
-   if (this.number >= 0 && this.number <= this.cardAction.length && this.game) {
-     this.game.cardTitle = this.cardAction[this.number - 1].title;
-     this.game.description = this.cardAction[this.number - 1].description;
-   }
- }
-
- 
+  // giveNewCardInfo() {
+  //   this.number = +this.card.split('_')[1];
+  //   // check if index != NaN
+  //   if (this.number >= 0 && this.number <= this.cardAction.length && this.game) {
+  //     this.game.cardTitle = this.cardAction[this.number - 1].title;
+  //     this.game.description = this.cardAction[this.number - 1].description;
+  //   }
+  // } 
 }
 
 

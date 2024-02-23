@@ -4,6 +4,7 @@ import { RouterOutlet, ActivatedRoute, Router } from '@angular/router';
 import { Game } from "./../../game";
 import { PlayerComponent } from "./../player/player.component";
 import { DialogAddPlayerComponent } from "./../dialog-add-player/dialog-add-player.component";
+import { GoodbyInfoComponent } from "./../goodby-info/goodby-info.component";
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -36,7 +37,7 @@ export class MainGameComponent implements AfterViewInit {
   public game: Game = new Game();
   public currentCard: string = '';
   public gameIdDisplay: string = '';
-
+  public nameListEnabled: boolean = false;
 
   constructor(
     public dialog: MatDialog,
@@ -71,7 +72,7 @@ export class MainGameComponent implements AfterViewInit {
     this.game.cardTitle = newDatas.cardTitle;
     this.game.description = newDatas.description;
     this.game.changeNow = newDatas.changeNow;
-    this.currentCard = newDatas.currentCard;
+    this.currentCard = newDatas.currentCard; //IMPORTANT for each passive user!
   }
 
   async initGame() {
@@ -97,7 +98,7 @@ export class MainGameComponent implements AfterViewInit {
       let gameId = parameters.get('gameId');
       if (gameId) {
         this.firestoreService.initGameListener(
-          gameId, this.setNewOverview.bind(this)          
+          gameId, this.setNewOverview.bind(this)
         );
         this.gameIdDisplay = gameId;
         console.log('got gameId: ', gameId);
@@ -105,11 +106,12 @@ export class MainGameComponent implements AfterViewInit {
         this.initGame();
       }
     });
+    this.openDialog();
   }
 
   takeCard() {
     if (!this.game.pickCardAnimation) {
-      
+
       this.currentCard = this.game.stack.pop()!;
       this.game.currentCard = this.currentCard;
       this.game.pickCardAnimation = true;
@@ -128,17 +130,6 @@ export class MainGameComponent implements AfterViewInit {
     //this.gameInfoComponent.giveNewCardInfo();
   }
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(DialogAddPlayerComponent);
-    dialogRef
-      .afterClosed()
-      .subscribe(name => {
-        this.game.players.push(name);
-        //Update inside the callback to set it DIRECTLY to firebase cloud
-        this.firestoreService.updateFirebase(this.game);
-      });
-  }
-
   copyId(gameIdDisplay: string): void {
     navigator.clipboard.writeText(gameIdDisplay).then(() => {
       this.snackBar.open('Paste it to yor invitation!', 'Close', {
@@ -147,5 +138,42 @@ export class MainGameComponent implements AfterViewInit {
     }, (err) => {
       console.error('Sorry, something went wrong! ', err);
     });
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogAddPlayerComponent);
+    dialogRef
+      .afterClosed()
+      .subscribe(name => {
+        if (name && name.trim()) {
+          this.game.players.push(name);
+          //Update inside the callback to set it DIRECTLY to firebase cloud
+          this.firestoreService.updateFirebase(this.game);
+        }
+      });
+  }
+
+  openGoodbyeInfo(): void {
+    const dialogRef = this.dialog.open(GoodbyInfoComponent, {
+      width: '250px',
+      data: { players: this.game.players }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (typeof result === 'string') {        
+        this.removePlayer(result);
+      } else {
+        this.nameListEnabled = true;
+      }
+    });
+  }
+  
+  removePlayer(playerName: string): void {
+    const index = this.game.players.indexOf(playerName);
+    if (index !== -1) {
+      this.game.players.splice(index, 1);
+      this.firestoreService.updateFirebase(this.game);
+    }
+    this.router.navigate(['/home']); // Zur Home-Seite navigieren
   }
 }

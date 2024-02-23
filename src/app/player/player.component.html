@@ -1,7 +1,6 @@
-<div class="player-frame" [class.player-active]="playerActive">
+<div class="player-frame" [class.player-active]="playerActive" (click)="onClick()">
     <div class="player-box">
-        <img src="./../../assets/images/user-48.png" alt="">
+        <img src="assets/images/user-48.png" alt="">
         <span>{{ name }}</span>
-    </div>
-    
+    </div>    
 </div>
