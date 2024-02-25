@@ -132,7 +132,7 @@ export class MainGameComponent implements AfterViewInit {
 
   copyId(gameIdDisplay: string): void {
     navigator.clipboard.writeText(gameIdDisplay).then(() => {
-      this.snackBar.open('Paste it to yor invitation!', 'Close', {
+      this.snackBar.open('Paste this Game-ID to the invitation of your friends.', 'Close', {
         duration: 3000, // duration 2 sec
       });
     }, (err) => {

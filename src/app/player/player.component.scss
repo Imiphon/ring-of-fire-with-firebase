@@ -1,9 +1,8 @@
 @import './../../styles.scss';
 
 .player-frame {
-position: relative;
 left: 0;
-top: 0 ;
+top: 0;
 @include dFlex($jc:flex-start, $ai:center);
 @include gold-bgr();
 @include frameStyle($w: 120px, $h:auto);
@@ -21,10 +20,8 @@ padding: 12px;
     @include dFlex();
 }
 
-.player-box {
-    margin-top: 8px;
-    position: relative;
-    left: 0;
+.player-box { 
+    width: 100%;    
     @include dFlex($fd:row, $jc:flex-start);
    
     span {
@@ -33,6 +30,9 @@ padding: 12px;
         text-align: center;
     }
     img {
+        position: relative;
+        left: 5px;
         width: 30px;
+        margin-right: 2px;
     }
 }

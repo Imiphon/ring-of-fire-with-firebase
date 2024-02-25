@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-say-goodbye-dialog',
   templateUrl: './goodby-info.component.html',
-  styleUrls: ['./goodby-info.component.scss'],
+  styleUrl: './goodby-info.component.scss',
   imports: [MatDialogModule, CommonModule],
   standalone: true, 
 })

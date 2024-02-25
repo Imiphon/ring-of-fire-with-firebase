@@ -2,7 +2,11 @@
 <div mat-dialog-content>
   <p>Click your name in the list to say goodbye.</p>
   <ul>
-    <li *ngFor="let player of data.players" (click)="onNameClick(player)">{{ player }}</li>
+    <li 
+    *ngFor="let player of data.players" 
+    (click)="onNameClick(player)"
+    [ngStyle]="{'cursor':'pointer', 'color':'red', 'gap':'10px'}"
+    >{{ player }}</li>
   </ul>
 </div>
 <div mat-dialog-actions>

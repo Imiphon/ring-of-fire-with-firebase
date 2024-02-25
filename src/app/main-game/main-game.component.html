@@ -1,18 +1,23 @@
 <div class="main-game-section">
-    <app-player class="player-group-frame" [ngStyle]="{ 'position': 'absolute', 'top.px': 120 + (i* 90)}"
-        *ngFor="let player of game.players; let i= index;" [playerActive]="i == game.currentPlayerId" [name]="player"
-        (playerClicked)="removePlayer($event)">
-        <!--Variable[name] is sending to sub-component app-player-->
+    <div class="player-group-frame">
+        <div class="add-btn">
+            <button mat-fab color="primary" (click)="openDialog()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+        <div class="scroll-container">
+            <app-player class="player-frame" [ngStyle]="{'top.px': 80 + (i* 90)}"
+            *ngFor="let player of game.players; let i= index;" [playerActive]="i == game.currentPlayerId" [name]="player"
+            (playerClicked)="removePlayer($event)">
+            <!--Variable[name] is sending to sub-component app-player-->
+            </app-player>
+        </div>
+    </div>
 
-    </app-player>
 
-    <div class="btn-frame">
+    <div class="goodby-btn-frame">
         <button mat-button (click)="openGoodbyeInfo()">Say Goodbye!</button>
-        <!--        
-            <a href="home">
-            Say Goodby!
-            </a>
-    -->
+        <!-- <a href="home">Say Goodby!</a>  -->
     </div>
 
     <div class="cardboard-frame">
@@ -33,16 +38,9 @@
         <img *ngIf="game.pickCardAnimation" [ngStyle]="{ 'right.px': 15 }"
             src="assets/images/playing_cards/{{ currentCard }}.png" class="pick-card" alt="currentCard">
     </div>
-    <div class="add-btn">
-
-        <button mat-fab color="primary" (click)="openDialog()">
-            <mat-icon>add</mat-icon>
-        </button>
-
-    </div>
 
     <div class="gameId-frame">
-        Copy ID <b>{{gameIdDisplay}}</b> for your friends.
+        <span>Copy ID <b>{{gameIdDisplay}}</b> for your friends.</span>
         <button mat-icon-button (click)="copyId(gameIdDisplay)">
             <mat-icon>content_copy</mat-icon>
         </button>
