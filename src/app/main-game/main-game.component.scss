@@ -68,10 +68,7 @@
     @media(max-width:700px), (max-height:450px) {
         max-height: 160px;
         top: 12px;
-
-        .player-group-frame .player-frame:not(.player-active) {
-            display: none;
-        }
+        overflow: none;
     }
 }
 
@@ -81,11 +78,10 @@
     top: 86px; //under button
     bottom: 5px;
     z-index: 4;
-    //height: -webkit-fill-available;
-}
 
-.player-frame {
-    width: auto;
+    @media(max-width:700px), (max-height:450px) {
+        overflow: hidden !important;
+    }
 }
 
 .gameId-frame {
@@ -129,6 +125,7 @@
 }
 
 .top-card {
+    opacity: 0;
     position: absolute;
     left: 50% !important;
     bottom: 50% !important;
@@ -149,19 +146,16 @@
 .pick-card {
     transform: scale(1.5) translateY(-10%);
     animation: pick-card-animation 1.5s ease-in-out forwards;
+    z-index: 2;
 }
 
 @keyframes pick-card-animation {
     0% {
-        transform: scale(1.0) translate(0, 0);
-    }
-
-    0% {
-        transform: scale(1.2) translate(0, 0);
+        transform: scale(1.1) translate(0, 0);
     }
 
     30% {
-        transform: scale(1.4) translate(0, 0);
+        transform: scale(1.2) translate(0, 0);
     }
 
     50% {
@@ -178,22 +172,6 @@
     }
 }
 
-@media (max-width: 700px),
-(max-height: 450px) {
-    .pick-card {
-        animation: pick-card-animation-small 1.5s ease-in-out forwards;
-    }
-}
-
-@keyframes pick-card-animation-small {
-    0% {
-        transform: scale(1.0) translate(0, 0);
-    }
-
-    100% {
-        transform: scale(1.0) translateX(25%) translateY(-10%);
-    }
-}
 
 .played-cards {
     position: absolute;

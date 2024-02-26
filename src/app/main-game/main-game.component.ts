@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, HostListener} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, ActivatedRoute, Router } from '@angular/router';
 import { Game } from "./../../game";
@@ -33,11 +33,13 @@ import { FirestoreService } from "../firebase-service/firebase-service";
 
 export class MainGameComponent implements AfterViewInit {
   @ViewChild(GameInfoComponent) gameInfoComponent!: GameInfoComponent;
+  //@HostListener('window:resize', ['$event']): any;
   //public pickCardAnimation = false;
   public game: Game = new Game();
   public currentCard: string = '';
   public gameIdDisplay: string = '';
   public nameListEnabled: boolean = false;
+  public isSmallScreen: boolean = false;
 
   constructor(
     public dialog: MatDialog,
@@ -45,8 +47,15 @@ export class MainGameComponent implements AfterViewInit {
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
     private router: Router
-  ) { }
+  ) { 
+    this.checkScreenSize(window.innerWidth, window.innerHeight);
+  }
 
+  private checkScreenSize(width: number, height:number) {
+    this.isSmallScreen = width <= 700 || height <= 450;
+    console.log(`Is small screen: ${this.isSmallScreen}`);
+  }
+  
   ngOnInit() {
     this.sortNewOrOld();
     this.firestoreService.deleteOldGames();
