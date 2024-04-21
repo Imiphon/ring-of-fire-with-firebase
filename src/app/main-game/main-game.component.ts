@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, HostListener} from '@angular/core';
+import { Component, ViewChild, AfterViewInit, HostListener, } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, ActivatedRoute, Router } from '@angular/router';
 import { Game } from "./../../game";

@@ -1,5 +1,6 @@
 @import './../../styles.scss';
 
+
 .landing-page-section {
     @include defSide();  
     background-image: url(./../../assets/images/backgrounds/landing-page-bgr.png);  
@@ -9,13 +10,33 @@
 
 }
 
-.btn-frame {
-    @include dFlex();
-    @include btnStyle();
-    @include gold-bgr();
-    >a {
-        @include aStyle();        
-    }
+.welcome-frame{
+    width: 180px;
 }
 
+.btn-frame {
+    @include dFlex();
+    @include btnStyle($w:100%);
+    @include gold-bgr();
+    margin: 12px;;
+    a {
+        @include aStyle();        
+    }
+    input {
+        @include gold-bgr($baseColor: $light-gold, $shadeAmount: 30%);
+        margin-bottom: 8px; 
+        padding: 4px;
+        border: transparent;
+        border-radius: 4px;
+        height: 24px;
+        text-align: center;
+    }  
+}
 
+button {
+    @include gold-bgr(); 
+    color: $dark-gold;
+    border: 2px solid $brown-gold;
+    border-radius: 4px;
+    box-shadow: 4px 5px 11px 1px;
+}

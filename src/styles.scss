@@ -5,7 +5,7 @@ $base-gold: #ffc400;
 $rich-gold: #da9620;
 $rose-gold: #b76e79;
 $brown-gold: #b67e1e;
-$dark-gold: #6a4c14;
+$dark-gold: #47320b;
 
 $defBrd: 2px solid $brown-gold;
 $defBoxS: -5px 5px 10px rgba(0, 0, 0, 0.5);
@@ -68,8 +68,8 @@ body {
     }
 }
 
-@mixin btnStyle {    
-    width: fit-content;
+@mixin btnStyle ($w:fit-content) {    
+    width: $w;
     height: auto;
     color: black !important;
     border-radius: 0.5em;

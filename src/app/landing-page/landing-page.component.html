@@ -1,14 +1,22 @@
 
 
 <div class="landing-page-section">
+<div class="welcome-frame">
     <div class="btn-frame">
-        <a mat-raised-button color="white" routerLink="/gameStart">Start a new Game!</a>
+        <!--mat-raised-button color="white"-->
+        <a  routerLink="/gameStart">Start a new Game!</a>
     </div>
     <div class="btn-frame">
-        <mat-form-field appearance="fill">
-            <mat-label>Game ID</mat-label>
-            <input matInput [(ngModel)]="gameId">
-        </mat-form-field>
-        <button mat-raised-button color="accent" (click)="joinGame()">Join with ID!</button>
+        <!--mat-form-field appearance="fill"-->
+       
+            <!--<mat-label>Game ID</mat-label>-->
+            <!--matInput-->
+            <input  [(ngModel)]="gameId" placeholder="Game ID">
+            <!--mat-form-field-->
+        
+        <!--mat-raised-button color="success" -->
+        <button (click)="joinGame()">Join with friends</button>
     </div>
+    
+</div>
 </div>
