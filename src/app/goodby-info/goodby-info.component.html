@@ -1,14 +1,19 @@
-<h1 mat-dialog-title>Goodbye</h1>
+<div class="dialog-frame">
+  <h1 mat-dialog-title>Goodbye</h1>
 <div mat-dialog-content>
   <p>Click your name in the list to say goodbye.</p>
-  <ul>
-    <li 
+  <table>
+    <tr 
     *ngFor="let player of data.players" 
     (click)="onNameClick(player)"
-    [ngStyle]="{'cursor':'pointer', 'color':'red', 'gap':'10px'}"
-    >{{ player }}</li>
-  </ul>
+    [ngStyle]="{'cursor':'pointer', 'color':'black', 'gap':'10px'}"
+    >
+  <td>{{ player }}</td>
+  <td class="x">X</td>
+</tr>
+  </table>
 </div>
 <div mat-dialog-actions>
   <button mat-button [mat-dialog-close]="false">No Thanks</button>
+</div>
 </div>

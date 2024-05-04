@@ -1,2 +1,39 @@
 @import './../../styles.scss';
 
+.dialog-frame {
+    @include gold-bgr();
+    @include btnStyle();
+}
+
+h1 {
+    text-align: center;
+    color: $dark-gold;
+}
+
+.mat-mdc-dialog-content {
+    width: 100%;
+
+
+
+    tr {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 9fr 1fr;
+
+        &:hover {
+            font-weight: 700;        }
+
+    }
+}
+
+.mat-mdc-dialog-actions {
+
+    display: flex;
+    justify-content: center;
+}
+
+button {
+    cursor: pointer;
+    @include gold-bgr();
+    @include btnStyle();
+}

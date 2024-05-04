@@ -5,22 +5,29 @@
                 <mat-icon>add</mat-icon>
             </button>
         </div>
-        <div class="scroll-container">            
-            <!--Variable[name] is sending to sub-component app-player-->
-            <ng-container *ngFor="let player of game.players; let i = index">
-                <app-player class="player-frame" [ngStyle]="{'top.px': 80 + (i* 90)}"
-                *ngIf="!isSmallScreen || i == game.currentPlayerId" 
-                [playerActive]="i == game.currentPlayerId"
-                [name]="player" (playerClicked)="removePlayer($event)">
-                </app-player>
-            </ng-container>            
-        </div>
+<div class="scroll-cont-frame">
+    <div class="scroll-container">
+        <!--Variable[name] is sending to sub-component app-player-->
+        <ng-container *ngFor="let player of game.players; let i = index">
+            <app-player class="player-frame" [ngStyle]="{'top.px': 80 + (i* 90)}"
+                *ngIf="!isSmallScreen || i == game.currentPlayerId" [playerActive]="i == game.currentPlayerId"
+                [name]="player"><!--(playerClicked)="removePlayer($event)"-->
+            </app-player>
+        </ng-container>
+    </div>
+</div>
     </div>
 
 
-    <div class="goodby-btn-frame">
-        <button mat-button (click)="openGoodbyeInfo()">Say Goodbye!</button>
-        <!-- <a href="home">Say Goodby!</a>  -->
+    <div class="btn-order-frame">
+        <div class="btn-frame">
+            <button mat-button (click)="openGoodbyeInfo()"><img src="assets/images/hand-by-gold-dark.png"
+                    alt="close"></button>
+        </div>
+        <div class="btn-frame">
+            <button mat-button (click)="openGoodbyeInfo()"><img src="assets/images/settings-gold-dark.png"
+                    alt="setting"></button>
+        </div>
     </div>
 
     <div class="cardboard-frame">

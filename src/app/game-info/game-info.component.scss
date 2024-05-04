@@ -1,5 +1,10 @@
 @import './../../styles.scss';
 
+.mat-mdc-card {
+    @include gold-bgr($baseColor: $light-gold,);
+    @include  btnStyle ();
+}
+
 .inner-card {
 padding: 0;
 }

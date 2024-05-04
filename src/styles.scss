@@ -1,6 +1,6 @@
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
-$light-gold: #fafad2;
+$light-gold: #ffd857;
 $base-gold: #ffc400;
 $rich-gold: #da9620;
 $rose-gold: #b76e79;
@@ -26,6 +26,7 @@ $defBoxS: -5px 5px 10px rgba(0, 0, 0, 0.5);
         @return white; //  light color for dark bgr
     }
 }
+//html, body { height: 100%; }
 
 body {
     width: 100vw;
@@ -33,6 +34,7 @@ body {
     margin: 0;
     overflow: hidden;
     scroll-behavior: smooth;
+    font-family: Roboto, "Helvetica Neue", sans-serif; 
 }
 
 @mixin mainBacking() {   
@@ -105,5 +107,6 @@ body {
     transform: scale(1.05);
     cursor: pointer;
   }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+

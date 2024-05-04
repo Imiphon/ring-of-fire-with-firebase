@@ -1,13 +1,16 @@
-<h1 mat-dialog-title>Your name.</h1>
+<div class="add-player-frame">
+  <h1 mat-dialog-title>Your name.</h1>
 <div mat-dialog-content>
-    <p>Please enter your name to show your fellow players that you are there.</p>
-    <mat-form-field>
-      <mat-label>Name</mat-label>
-      <input matInput [(ngModel)]="name">
-    </mat-form-field>
-  </div>
+  <p>Please enter your name to show your fellow players that you are there.</p>
+  <mat-form-field>
+    <mat-label>Your Name</mat-label>
+    <input matInput [(ngModel)]="name">
+  </mat-form-field>
+  <span *ngIf="invalidName">Please enter your name</span>
+</div>
 
-  <div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">No Thanks</button>
-    <button mat-button (click)="onOkClick()" cdkFocusInitial>Ok</button>
-  </div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button (click)="onOkClick()" >Ok</button>
+</div>
+</div>

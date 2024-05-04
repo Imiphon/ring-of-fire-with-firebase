@@ -4,11 +4,13 @@ import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input'; // Importieren Sie MatInputModule
 import { MatButtonModule } from '@angular/material/button'; // Importieren Sie MatButtonModule
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dialog-add-player',
   standalone: true,
   imports: [
+    CommonModule,
     FormsModule,
     MatDialogModule,
     MatFormFieldModule,

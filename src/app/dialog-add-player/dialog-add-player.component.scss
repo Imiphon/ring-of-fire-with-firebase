@@ -1,0 +1,22 @@
+@import './../../styles.scss';
+
+.add-player-frame{
+    @include gold-bgr($baseColor: $light-gold,);
+    @include  btnStyle ();
+    .cdk-overlay-container {
+        border-color: transparent;
+    }
+}
+mat-form-field {
+    @include dFlex();
+}
+
+.mdc-text-field--disabled {
+    background-color: transparent;
+}
+
+button {
+    @include btnStyle();
+    @include gold-bgr($baseColor: $light-gold,);
+}
+
