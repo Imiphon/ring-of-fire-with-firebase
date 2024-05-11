@@ -2,7 +2,7 @@ export class Game {
     //coming from LandingPageComponent if it still exist 
     public id?: string = '';
 
-    public players: string[] = ['Anna', 'Egon', 'Herbert'];
+    public players: string[] = ['John Doe'];
     public stack: string[] = [];
     public playedCards: string[] = [];
     public currentPlayerId: number = 0;

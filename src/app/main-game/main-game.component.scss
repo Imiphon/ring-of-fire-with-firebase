@@ -8,6 +8,69 @@
     @include mainBacking();
 }
 
+.player-group-frame {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    width: 180px;
+    height: fit-content;
+    //min-height: 160px;
+    max-height: 50vh; // Adjust the height as necessary
+    padding-top: 80px; // Space for .add-btn
+    background-color: white;
+    @include gold-bgr($baseColor: $brown-gold);
+    @include frameStyle($w: 180px, $h: 400px);
+    @media(max-width:700px), (max-height:450px) {
+        max-height: 100px;
+        top: 12px;
+    }
+}
+
+.scroll-container {   
+    position: absolute;
+    top: 80px; // Positioning right below the .add-btn
+    width: 100%;
+    height: calc(100% - 80px); // Take the remaining height after .add-btn
+    overflow: auto; 
+    z-index: 4;
+    p{  
+        display: none;
+        text-align: center;
+    }
+    @media(max-width:700px), (max-height:450px) {
+        overflow: hidden;
+        p{  
+            display: block;
+        }
+    }
+}
+
+.add-btn-frame {
+    @include dFlex();
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 80px;
+    z-index: 5;
+    box-shadow: 0px 4px 0px rgba(0, 0, 0, 0.2);
+    @media(max-width:700px), (max-height:450px) {
+        height: 64px;
+    }
+    button {
+        @include gold-bgr;
+        color: $dark-gold;
+        border-radius: 100%;
+        &:hover {
+            filter: brightness(120%);
+            transform: scale(1.1) translateY(-10%);
+        }
+        @media(max-width:700px), (max-height:450px) {
+            width: 32px;
+            height: 32px;
+        }
+    }
+}
+
 .btn-order-frame {
     @include dFlex($fd:row, $jc:space-between);
     width: fit-content;
@@ -18,6 +81,7 @@
         flex-direction: column;
     }
 }
+//for goodby and setting buttons
 .btn-frame { 
     width: 32px !important;
     height: 32px !important;   
@@ -36,73 +100,6 @@
         right: 12px;
         width: 32px;
         height: 32px;  
-    }
-}
-
-.add-btn {
-    @include dFlex();
-    position: relative;
-    width: 100%;
-    height: 80px;
-    box-shadow: 0px 4px 0px rgba(0, 0, 0, 0.2);
-    z-index: 5;
-
-    @media(max-width:700px), (max-height:450px) {
-         height: 64px;
-    }
-
-    button {
-        @include gold-bgr;
-        color: $dark-gold;
-        border-radius: 100%;
-
-        &:hover {
-            filter: brightness(120%);
-            transform: scale(1.1) translateY(-10%);
-        }
-
-        @media(max-width:700px), (max-height:450px) {
-            width: 32px;
-            height: 32px;
-        }
-    }
-
-}
-
-.player-group-frame {
-    position: absolute;
-    top: 32px;
-    left: 32px;
-    width: 180px;
-    height: fit-content !important;
-    min-height: 160px;
-    max-height: 50vh;
-    padding: 5px;
-    background-color: white;
-
-    @include gold-bgr($baseColor: $brown-gold);
-    @include frameStyle($w: 180px, $h: 400px);
-
-    @media(max-width:700px), (max-height:450px) {
-        max-height: 160px;
-        top: 12px;
-        overflow: none;
-    }
-}
-
-.scroll-cont-frame {
-    overflow-y: auto !important;
-}
-
-.scroll-container {
-   
-    position: relative;
-    top: 8px; //under button
-    bottom: 5px;
-    z-index: 4;
-
-    @media(max-width:700px), (max-height:450px) {
-        overflow: hidden !important;
     }
 }
 

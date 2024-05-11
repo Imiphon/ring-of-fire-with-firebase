@@ -1,21 +1,21 @@
 <div class="main-game-section">
     <div class="player-group-frame">
-        <div class="add-btn">
+        <div class="add-btn-frame">
             <button mat-fab color="primary" (click)="openDialog()">
                 <mat-icon>add</mat-icon>
             </button>
         </div>
-<div class="scroll-cont-frame">
-    <div class="scroll-container">
-        <!--Variable[name] is sending to sub-component app-player-->
-        <ng-container *ngFor="let player of game.players; let i = index">
-            <app-player class="player-frame" [ngStyle]="{'top.px': 80 + (i* 90)}"
-                *ngIf="!isSmallScreen || i == game.currentPlayerId" [playerActive]="i == game.currentPlayerId"
-                [name]="player"><!--(playerClicked)="removePlayer($event)"-->
-            </app-player>
-        </ng-container>
-    </div>
-</div>
+
+        <div class="scroll-container">
+            <p>next Player is: </p>
+            <!--Variable[name] is sending to sub-component app-player-->
+            <ng-container *ngFor="let player of game.players; let i = index">
+                <app-player class="player-frame" [ngStyle]="{'top.px': 80 + (i* 90)}"
+                    *ngIf="!isSmallScreen || i == game.currentPlayerId" [playerActive]="i == game.currentPlayerId"
+                    [name]="player">
+                </app-player>
+            </ng-container>
+        </div>
     </div>
 
 

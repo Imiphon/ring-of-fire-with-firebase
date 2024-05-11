@@ -40,6 +40,7 @@ export class MainGameComponent implements AfterViewInit {
   public gameIdDisplay: string = '';
   public nameListEnabled: boolean = false;
   public isSmallScreen: boolean = false;
+  public isOpenDialog: boolean = false;
 
   constructor(
     public dialog: MatDialog,
@@ -47,15 +48,15 @@ export class MainGameComponent implements AfterViewInit {
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
     private router: Router
-  ) { 
+  ) {
     this.checkScreenSize(window.innerWidth, window.innerHeight);
   }
 
-  private checkScreenSize(width: number, height:number) {
+  private checkScreenSize(width: number, height: number) {
     this.isSmallScreen = width <= 700 || height <= 450;
     console.log(`Is small screen: ${this.isSmallScreen}`);
   }
-  
+
   ngOnInit() {
     this.sortNewOrOld();
     this.firestoreService.deleteOldGames();
@@ -110,12 +111,10 @@ export class MainGameComponent implements AfterViewInit {
           gameId, this.setNewOverview.bind(this)
         );
         this.gameIdDisplay = gameId;
-        console.log('got gameId: ', gameId);
+        this.openDialog();
       } else {
-        this.initGame();
-      }
+        this.initGame();      }
     });
-    this.openDialog();
   }
 
   takeCard() {
@@ -150,6 +149,7 @@ export class MainGameComponent implements AfterViewInit {
   }
 
   openDialog(): void {
+    if (this.isOpenDialog) return;
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
     dialogRef
       .afterClosed()
@@ -167,16 +167,16 @@ export class MainGameComponent implements AfterViewInit {
       width: '250px',
       data: { players: this.game.players }
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
-      if (typeof result === 'string') {        
+      if (typeof result === 'string') {
         this.removePlayer(result);
       } else {
         this.nameListEnabled = true;
       }
     });
   }
-  
+
   removePlayer(playerName: string): void {
     const index = this.game.players.indexOf(playerName);
     if (index !== -1) {
